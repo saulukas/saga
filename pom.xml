@@ -13,6 +13,10 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
+    <build>
+        <finalName>saga</finalName>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
