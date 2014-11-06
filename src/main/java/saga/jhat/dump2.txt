@@ -1,0 +1,22 @@
+Instance Counts for All Classes (excluding platform)
+3 instances of class com.sun.tools.jconsole.JConsoleContext$ConnectionState
+2 instances of class $Proxy0
+2 instances of class com.sun.jmx.remote.internal.PRef
+1 instance of class [Lcom.sun.tools.jconsole.JConsoleContext$ConnectionState;
+0 instances of class com.sun.jmx.remote.internal.ProxyStub
+0 instances of class com.sun.tools.attach.AgentInitializationException
+0 instances of class com.sun.tools.attach.AgentLoadException
+0 instances of class com.sun.tools.attach.AttachNotSupportedException
+0 instances of class com.sun.tools.attach.AttachPermission
+0 instances of class com.sun.tools.attach.VirtualMachine
+0 instances of class com.sun.tools.attach.VirtualMachineDescriptor
+0 instances of class com.sun.tools.attach.spi.AttachProvider
+0 instances of class com.sun.tools.jconsole.JConsoleContext
+0 instances of class com.sun.tools.jconsole.JConsolePlugin
+Total of 8 instances occupying 60 bytes.
+Other Queries
+
+    * Show instance counts for all classes (including platform)
+    * Show All Classes (including platform)
+    * Show All Classes (excluding platform) 
+

@@ -1,0 +1,17 @@
+----------------------------------------------------------------------
+Reading old file: dump1.txt
+    classes: 4
+    objects: 6
+Reading new file: dump2.txt
+    classes: 4
+    objects: 8
+Different classes (objects):
+    new  classes: C+ =	-
+    lost classes: C- =	-
+    new  objects: O+ =	2	(2)
+    lost objects: O- =	-
+----------------------------------------------------------------------
+O+	1	$Proxy0
+O+	1	com.sun.jmx.remote.internal.PRef
+----------------------------------------------------------------------
+Classes touched by differences: 2
