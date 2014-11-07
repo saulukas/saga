@@ -1,7 +1,6 @@
 package saga.maven;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.LinkedList;
@@ -77,7 +76,7 @@ public class WatchMavenTargets extends Script {
     }
 
     private void executeWith(final Params params) throws Exception {
-        final Process[] process = new Process[] {startCommandProcess(params)};
+        final Process[] process = new Process[]{startCommandProcess(params)};
         int scanIntervalSeconds = 1;
         List<File> dirs = targetDirsOf(params.modules);
         Scanner.watch(scanIntervalSeconds, dirs, new Scanner.BulkListener() {
@@ -86,7 +85,7 @@ public class WatchMavenTargets extends Script {
                 onFilesChanged(fileNames, params, process);
             }
         });
-        process[0].destroy();
+        stopCommandProcess(process[0]);
     }
 
     private static List<File> targetDirsOf(List<String> modules) {
@@ -113,15 +112,20 @@ public class WatchMavenTargets extends Script {
     private static void onFilesChanged(List<String> fileNames, Params params, Process[] process) throws Exception {
         List<String> changedFiles = changedFilesOf(fileNames, params.classesOnly);
         if (!changedFiles.isEmpty()) {
-            process[0].destroy();
+            stopCommandProcess(process[0]);
             process[0] = startCommandProcess(params);
         }
     }
 
-    private static Process startCommandProcess(Params params) throws IOException, InterruptedException {
-        ProcessBuilder process = new ProcessBuilder(params.commandAndArgs);
-        process.redirectErrorStream(true);
-        process.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-        return process.start();
+    private static Process startCommandProcess(Params params) throws Exception {
+        ProcessBuilder processBuilder = new ProcessBuilder(params.commandAndArgs);
+        processBuilder.redirectErrorStream(true);
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        return processBuilder.start();
+    }
+
+    private static void stopCommandProcess(Process process) throws Exception {
+        process.getOutputStream().close();
+        process.waitFor();
     }
 }
