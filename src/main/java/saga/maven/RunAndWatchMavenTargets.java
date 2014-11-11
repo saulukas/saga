@@ -100,6 +100,14 @@ public class RunAndWatchMavenTargets extends Script {
         stopCommandProcess(process[0]);
     }
 
+    private static void onFilesChanged(List<String> fileNames, Params params, Process[] process) throws Exception {
+        List<String> changedFiles = changedFilesOf(fileNames, params.classesOnly);
+        if (!changedFiles.isEmpty()) {
+            stopCommandProcess(process[0]);
+            process[0] = startCommandProcess(params);
+        }
+    }
+
     private static List<File> targetDirsOf(List<String> modules) {
         ArrayList<File> dirs = new ArrayList<>();
         for (String module : modules) {
@@ -119,14 +127,6 @@ public class RunAndWatchMavenTargets extends Script {
             }
         }
         return changedFiles;
-    }
-
-    private static void onFilesChanged(List<String> fileNames, Params params, Process[] process) throws Exception {
-        List<String> changedFiles = changedFilesOf(fileNames, params.classesOnly);
-        if (!changedFiles.isEmpty()) {
-            stopCommandProcess(process[0]);
-            process[0] = startCommandProcess(params);
-        }
     }
 
     private static Process startCommandProcess(Params params) throws Exception {
