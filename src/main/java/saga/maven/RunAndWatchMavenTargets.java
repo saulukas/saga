@@ -10,21 +10,33 @@ import saga.util.Script;
 import static saga.util.Script.println;
 import saga.util.SimpleClassName;
 
-public class WatchMavenTargets extends Script {
+public class RunAndWatchMavenTargets extends Script {
+
+    public String name() {
+        return SimpleClassName.of(getClass());
+    }
 
     public void printUsage() {
-        println("WatchMavenTargets 1.00 (c) saga 2014");
         println("");
-        println("    Watches 'target' subdirectories of maven module directories and");
-        println("    executes command if changes detected.");
+        println(name() + " 1.00 (c) saga 2014");
+        println("");
+        println("    Runs given 'command' in a separate process and watches 'target'");
+        println("    subdirectories of given maven 'modules' for changes.");
+        println("    If changes are detected 'command' process is requested to exit");
+        println("    by closing its standard input stream and restarted.");
+        println("");
+        println("    Command is expected to block on reading its input stream and");
+        println("    exit if any input (like end-of-file) is received.");
+        println("");
+        println("    Press ENTER to exit " + name() + ".");
         println("");
         println("Paramters:");
         println("");
         println("   module[:module]  all|class  command [args]");
         println("");
         println("   module[:module]  - list of colon separated maven module directories");
-        println("   all|class        - check all changes or '.class' files only");
-        println("   command          - command to execute if changes detected");
+        println("   all|class        - check all files for changes or '.class' files only");
+        println("   command          - command with args to start and restart if changes detected");
         println("");
     }
 
@@ -62,7 +74,7 @@ public class WatchMavenTargets extends Script {
     }
 
     public static void main(String[] args) throws Exception {
-        new WatchMavenTargets().execute(asList(args));
+        new RunAndWatchMavenTargets().execute(asList(args));
     }
 
     private void execute(List<String> args) throws Exception {

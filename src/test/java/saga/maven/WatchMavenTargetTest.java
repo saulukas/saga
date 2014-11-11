@@ -8,7 +8,7 @@ public class WatchMavenTargetTest {
 
     @Test
     public void testSomeMethod() {
-        WatchMavenTargets script = new WatchMavenTargets();
+        RunAndWatchMavenTargets script = new RunAndWatchMavenTargets();
         println(script.parseArgs(Arrays.asList("ohoho;ahaha", "class", "cmd", "a", "b")));
     }
 

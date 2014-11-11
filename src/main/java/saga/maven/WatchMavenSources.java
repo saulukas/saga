@@ -18,15 +18,19 @@ public class WatchMavenSources extends Script {
     public void printUsage() {
         println("WatchMavenSources 1.00 (c) saga 2014");
         println("");
-        println("    Watches 'target' subdirectories of maven module directories and");
-        println("    executes command if changes detected.");
+        println("   UNDER CONSTRUCTION");
+        println("");
+        println("    Watches 'src' subdirectories of maven module directories.");
+        println("    Watches 'src' subdirectories of maven module directories.");
+        println("    Runs 'mvn test-compile' for every changed module.");
+        println("    Executes command if changes detected.");
         println("");
         println("Paramters:");
         println("");
-        println("   module[:module]  all|class  command [args]");
+        println("   module[:module]  all|java  command [args]");
         println("");
         println("   module[:module]  - list of colon separated maven module directories");
-        println("   all|class        - check all changes or '.class' files only");
+        println("   all|java         - check all changes or '.java' files only");
         println("   command          - command to execute if changes detected");
         println("");
     }
