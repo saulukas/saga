@@ -20,14 +20,14 @@ import static saga.util.SystemOut.println;
 //    ==============                                                       //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class EnumerateFiles extends Tool
+public class RenameFiles extends Tool
 {
     public static final String  TMP_FILE_PREFIX = "enum.files.tmp-";
     
     //---------------------------------------------------------------------
-    public EnumerateFiles ()
+    public RenameFiles ()
     {
-        super("enum-files", "renames files by adding sequential numbers to their names");
+        super("rename-files", "Renames files by adding sequential numbers to their names.");
     }
 
     //---------------------------------------------------------------------
@@ -36,6 +36,8 @@ public class EnumerateFiles extends Tool
     {
          if (args.length < 1) {
              println(name + " 1.0, (c) saga 2006");
+             println("");
+             println("    " + oneLineDescription);
              println("");
              println("Parameters:");
              println("");

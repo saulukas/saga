@@ -31,7 +31,7 @@ public class LineCount extends Tool
     public LineCount() 
     {
         super("line-count", 
-                "counts new lines in files with given file name ends");
+                "Counts new lines in files with given file name ends.");
     }
     //---------------------------------------------------------------------
     @Override
@@ -40,6 +40,8 @@ public class LineCount extends Tool
         if (args.length < 2)
         {
             println(name + " (c) saga 2009");
+            println("");
+            println("    " + oneLineDescription);
             println("");
             println("Parameters:");
             println("");

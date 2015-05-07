@@ -18,12 +18,16 @@ public class TextUtils {
         return result;
     }
 
-    public static String alignLeft(String s, int width) {
+    public static String alignLeft(String s, int width, char fillChar) {
         String result = "" + s;
         for (int i = result.length(); i < width; i++) {
-            result = result + " ";
+            result += fillChar;
         }
         return result;
+    }
+
+    public static String alignLeft(String s, int width) {
+        return alignLeft(s, width, ' ');
     }
 
     public static String add1000seps(Object number) {

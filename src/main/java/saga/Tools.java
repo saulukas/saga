@@ -2,7 +2,8 @@ package saga;
 
 import java.util.Map;
 import java.util.TreeMap;
-import saga.enumfiles.EnumerateFiles;
+import saga.enumfiles.RenameFiles;
+import saga.file.SortByDate;
 import saga.linecount.LineCount;
 import saga.linecount.ListFileTypes;
 import static saga.util.SystemOut.print;
@@ -22,12 +23,16 @@ public class Tools {
     static void registerAllTools() {
         registerTool(new LineCount());
         registerTool(new ListFileTypes());
-        registerTool(new EnumerateFiles());
+        registerTool(new RenameFiles());
+        registerTool(new SortByDate());
     }
     
     private static void printAvailableTools() {
         for (Tool tool : name2toolMap.values()) {
-            print("\n    " + alignLeft(tool.name, maxNameLength) + "    " + tool.oneLineDescription);
+            print("\n    " 
+                    + alignLeft(tool.name + " ", maxNameLength + 1, '.') 
+                    + ".... " 
+                    + tool.oneLineDescription);
         }
     }
 

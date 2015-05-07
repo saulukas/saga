@@ -31,7 +31,7 @@ public class ListFileTypes extends Tool
     public ListFileTypes() 
     {
         super("list-file-types", 
-            "finds different file name extensions/types and counts them");
+            "Finds different file name extensions/types and counts them.");
     }
     //---------------------------------------------------------------------
     @Override
@@ -39,6 +39,8 @@ public class ListFileTypes extends Tool
         if (args.length < 1)
         {
             println(name + " 1.02, (c) saga 2008");
+            println("");
+            println("    " + oneLineDescription);
             println("");
             println("Parameters:");
             println("");
