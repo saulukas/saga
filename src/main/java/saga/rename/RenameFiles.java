@@ -6,7 +6,7 @@
 //                                                                         //
 //-------------------------------------------------------------------------//
 
-package saga.enumfiles;
+package saga.rename;
 
 import java.io.*;
 import java.util.*;

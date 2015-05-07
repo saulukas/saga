@@ -2,8 +2,10 @@ package saga;
 
 import java.util.Map;
 import java.util.TreeMap;
-import saga.enumfiles.RenameFiles;
+import saga.cvslog.CVSLogFormatter;
+import saga.rename.RenameFiles;
 import saga.file.SortByDate;
+import saga.jhat.PrintJhatInstanceCountDiff;
 import saga.linecount.LineCount;
 import saga.linecount.ListFileTypes;
 import static saga.util.SystemOut.print;
@@ -25,6 +27,8 @@ public class Tools {
         registerTool(new ListFileTypes());
         registerTool(new RenameFiles());
         registerTool(new SortByDate());
+        registerTool(new CVSLogFormatter());
+        registerTool(new PrintJhatInstanceCountDiff());
     }
     
     private static void printAvailableTools() {

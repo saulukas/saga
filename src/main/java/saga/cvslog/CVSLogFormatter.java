@@ -9,6 +9,7 @@ package saga.cvslog;
 
 import java.io.*;
 import java.util.*;
+import saga.Tool;
 
 import saga.util.Version;
 
@@ -18,7 +19,7 @@ import saga.util.Version;
 //    ===============                                                      //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class CVSLogFormatter
+public class CVSLogFormatter extends Tool
 {
     public static final Version VERSION = new Version (1, 2, 0);
     //---------------------------------------------------------------------
@@ -41,25 +42,28 @@ public class CVSLogFormatter
         LineStartNotFoundException(String msg) {super(msg);}
     }
     //---------------------------------------------------------------------//
-    public static void main (String[] args) throws Exception
+    public CVSLogFormatter() 
     {
+        super("format-cvs-log", "Reads 'cvs log' output from stdin and writes formats to stdout.");
+    }
+    //---------------------------------------------------------------------//
+    @Override
+    public int run(String[] args) throws Exception {
         PrintStream      writer = System.out;    
             
         int lineWidth = DEFAULT_LINE_WIDTH;
         
         if (args.length < 1)
         {
-            writer.println("CVSLogFormatter " + VERSION + " (c) saga 2009");
+            writer.println(name + VERSION + " (c) saga 2009");
             writer.println("");
-            writer.println("   Reads 'cvs log' output on stdin.");
-            writer.println("   Writes formated log to stdout.");
+            writer.println("    " + oneLineDescription);
             writer.println("");
             writer.println("Usage:");
             writer.println("");
-            writer.println("   CVSLogFormatter  lineWidth    - minLineWidth=" 
-                + MIN_LINE_WIDTH);
+            writer.println("   CVSLogFormatter  lineWidth    - minLineWidth=" + MIN_LINE_WIDTH);
             writer.println("");
-            return;
+            return 0;
         }
         
         lineWidth = Integer.parseInt(args[0]);
@@ -100,6 +104,8 @@ public class CVSLogFormatter
             }
             prev = item;
         }
+        
+        return 0;
     }
     //---------------------------------------------------------------------
     public static void printTagItem

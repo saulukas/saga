@@ -11,6 +11,7 @@ package saga.jhat;
 
 import java.io.*;
 import java.util.*;
+import saga.Tool;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
@@ -18,7 +19,7 @@ import java.util.*;
 //    ==========================                                           //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class PrintJhatInstanceCountDiff
+public class PrintJhatInstanceCountDiff extends Tool
 {
     static final String[] MARKERS = new String []
     {
@@ -44,11 +45,18 @@ public class PrintJhatInstanceCountDiff
         {type = t;  count = c;  className = n;}
     }
     //---------------------------------------------------------------------
-    public static void showUsage ()
+    public PrintJhatInstanceCountDiff() 
+    {
+        super("jhat-diff", "Finds diffs in two JHAT instance count outputs.");
+    }
+    //---------------------------------------------------------------------
+    public void showUsage ()
     {
         System.out.println
         (
-            "PrintJhatInstanceCountDiff 1.01, (c) saga 2009"
+            name + " 1.01, (c) saga 2009"
+        + "\n"
+        + "\n    " + oneLineDescription
         + "\n"
         + "\nParameters:"
         + "\n"
@@ -57,24 +65,13 @@ public class PrintJhatInstanceCountDiff
         );
     }
     //---------------------------------------------------------------------
-    public static void main (String[] args)
-    {
-        try
-        {
-            mainX(args);
-        }
-        catch (Throwable t)
-        {
-            t.printStackTrace();
-        }
-    }
-    //---------------------------------------------------------------------
-    public static void mainX (String[] args) throws Exception
-    {
+    @Override
+    public int run(String[] args) throws Exception {
+    
         if (args.length < 2)
         {
             showUsage();
-            System.exit(1);
+            return 1;
         }
 
         System.out.println(SEPARATOR_LINE);
@@ -107,7 +104,7 @@ public class PrintJhatInstanceCountDiff
         System.out.println(SEPARATOR_LINE);
 
         if (diffCounts.size() <= 0)
-            return;
+            return 0;
 
         printDiffCounts (newClasses);
         printDiffCounts (lostClasses);
@@ -116,6 +113,8 @@ public class PrintJhatInstanceCountDiff
 
         System.out.println(SEPARATOR_LINE);
         System.out.println("Classes touched by differences: " + diffCounts.size());
+        
+        return 0;
     }
     //---------------------------------------------------------------------
     public static Map<String, Long> readObjectCounts (String fileName)
@@ -159,8 +158,8 @@ public class PrintJhatInstanceCountDiff
         return totalCount;
     }
     //---------------------------------------------------------------------
-    public static List<DiffCount> getDiffCounts (Map<String, Long> oldCounts,
-                                                   Map<String, Long> newCounts)
+    static List<DiffCount> getDiffCounts (Map<String, Long> oldCounts,
+                                          Map<String, Long> newCounts)
     {
         Map<String, Long> leftCounts  = new TreeMap<String, Long>(oldCounts);
         List<DiffCount>  diffCounts = new LinkedList<DiffCount>();
@@ -197,8 +196,7 @@ public class PrintJhatInstanceCountDiff
         return diffCounts;
     }
     //---------------------------------------------------------------------
-    public static List<DiffCount> getListForType (String type,
-                                                   List<DiffCount> counts)
+    static List<DiffCount> getListForType (String type, List<DiffCount> counts)
     {
         List<DiffCount> set = new LinkedList<DiffCount>();
         for (DiffCount toc : counts)
@@ -207,7 +205,7 @@ public class PrintJhatInstanceCountDiff
         return set;
     }
     //---------------------------------------------------------------------
-    public static long getTotalObjectCount (Collection<DiffCount> counts)
+    static long getTotalObjectCount (Collection<DiffCount> counts)
     {
         long totalCount = 0;
         for (DiffCount toc : counts)
@@ -215,7 +213,7 @@ public class PrintJhatInstanceCountDiff
         return totalCount;
     }
     //---------------------------------------------------------------------
-    public static void printSummary (String prefix, Collection<DiffCount> counts)
+    static void printSummary (String prefix, Collection<DiffCount> counts)
     {
         System.out.print(prefix + " =\t");
         if (counts.size() <= 0)
