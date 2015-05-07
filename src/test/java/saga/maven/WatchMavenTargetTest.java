@@ -2,7 +2,7 @@ package saga.maven;
 
 import java.util.Arrays;
 import org.junit.Test;
-import static saga.util.Script.println;
+import static saga.util.SystemOut.println;
 
 public class WatchMavenTargetTest {
 

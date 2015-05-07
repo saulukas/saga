@@ -10,6 +10,9 @@ package saga.enumfiles;
 
 import java.io.*;
 import java.util.*;
+import saga.Tool;
+import static saga.util.SystemOut.print;
+import static saga.util.SystemOut.println;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
@@ -17,15 +20,136 @@ import java.util.*;
 //    ==============                                                       //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class EnumerateFiles
+public class EnumerateFiles extends Tool
 {
     public static final String  TMP_FILE_PREFIX = "enum.files.tmp-";
     
     //---------------------------------------------------------------------
-    public static void printInvalidArguments ()
+    public EnumerateFiles ()
     {
-        System.out.println("ERROR: invalid command-line arguments");
-        System.exit(1);
+        super("enum-files", "renames files by adding sequential numbers to their names");
+    }
+
+    //---------------------------------------------------------------------
+    @Override
+    public int run(String[] args) throws Exception 
+    {
+         if (args.length < 1) {
+             println(name + " 1.0, (c) saga 2006");
+             println("");
+             println("Parameters:");
+             println("");
+             println("    [-r] [-startNr n] prefix directory [accepted-extensions]");
+             println("");
+             return 0;             
+         }
+         if (args.length < 2) {
+             printInvalidArguments();
+             return 2;
+         }
+             
+         int      argIndex     = 0;    
+         boolean  reverseOrder = false;
+         int      startIndex   = 1;
+         String   prefix       = "";
+         String   directory    = "";
+         
+         if (args[argIndex].equals("-r"))
+         {
+             argIndex     += 1;
+             reverseOrder  = true;
+         }
+         if (args.length < 2)
+             printInvalidArguments();
+         
+         if (args[argIndex].equals("-startNr"))
+         {
+             argIndex     += 1;
+             startIndex    = Integer.parseInt(args[argIndex]);
+             argIndex     += 1;
+             if (startIndex < 1)
+                 startIndex = 1;
+         }
+         if (args.length < 2)
+             printInvalidArguments();
+         
+         prefix    = args[argIndex++];
+         directory = args[argIndex++];
+         
+         int extCount = (args.length - argIndex);
+         if (extCount < 0)
+             extCount = 0;
+         String[]  validExtensions = new String [extCount];
+         for (int i = 0;  i < extCount;  i++)
+             validExtensions[i] = args[argIndex++].toUpperCase();
+         
+         File[] directoryContent = new File(directory).listFiles();
+         if (directoryContent == null)
+             directoryContent = new File [0];
+             
+         println("--------------------------------------------");
+         
+         TreeMap<String, File> fileMap = new TreeMap<String, File>();
+         
+         for (int i = 0;  i < directoryContent.length;   i++)
+             if (directoryContent[i].isFile())
+             {
+                 String fileName = "" + directoryContent[i];
+                 fileName = fileName.toUpperCase();
+                 if (isExtensionValid(fileName, validExtensions))
+                     fileMap.put(fileName, directoryContent[i]);
+             }
+             
+         int  fileNr = startIndex;
+         if (reverseOrder)
+             fileNr = startIndex + fileMap.size() - 1;
+         Iterator iterator = fileMap.keySet().iterator();
+         
+         File[] tmpFiles = new File [fileMap.size()];
+         while (iterator.hasNext())
+         {
+             String oldName = (String) iterator.next();
+             String newName = 
+                 oldName.substring(0, getDirectoryLength(oldName))
+                 + TMP_FILE_PREFIX + prefix 
+                 + intToString(fileNr, 4)
+                 + getFileNameExtension(oldName);
+             int tmpFileIndex = (fileNr - startIndex);
+             tmpFiles[tmpFileIndex] = new File(newName);
+             File file = fileMap.get (oldName);
+             if (!file.renameTo(tmpFiles[tmpFileIndex]))
+                 println("\n    ERROR: " + newName + "  <-  " + oldName);
+             else
+                 print(" " + fileNr);
+             fileNr += (reverseOrder ? -1 : 1);    
+         }    
+         println("");
+         println("--------------------------------------------");
+         for (int i = 0;  i < tmpFiles.length;  i++)
+         {
+             fileNr  = startIndex + i;
+             String oldName = tmpFiles[i].getName();
+             String newName = 
+                 oldName.substring(0, getDirectoryLength(oldName))
+                 + prefix 
+                 + intToString(fileNr, 4)
+                 + getFileNameExtension(oldName);
+             File file = fileMap.get (oldName);
+             if (!tmpFiles[i].renameTo(new File(newName)))
+                 println("\n    ERROR: " + newName + "  <-  " + oldName);
+             else
+                 print(" " + fileNr);
+         }    
+         println("");
+         println("--------------------------------------------");
+         println("File count: " + fileMap.size());
+         
+         return 0;
+    }
+    
+    //---------------------------------------------------------------------
+    public static void printInvalidArguments() {
+        println("ERROR: invalid command-line arguments");
     }
 
     //---------------------------------------------------------------------
@@ -83,117 +207,6 @@ public class EnumerateFiles
         return false;        
     }
     
-    //---------------------------------------------------------------------
-    public static void main (String[] args) throws Exception
-    {
-         System.out.println(
-         "EnumerateFiles 1.0, (c) saga 2006\n" +
-         "\n" +
-         "Parameters:\n" +
-         "\n" +
-         "    [-r] [-startNr n] prefix directory [accepted-extensions]\n"
-         );
-         if (args.length <= 0)
-             return;
-         if (args.length < 2)
-             printInvalidArguments();
-             
-         int      argIndex     = 0;    
-         boolean  reverseOrder = false;
-         int      startIndex   = 1;
-         String   prefix       = "";
-         String   directory    = "";
-         
-         if (args[argIndex].equals("-r"))
-         {
-             argIndex     += 1;
-             reverseOrder  = true;
-         }
-         if (args.length < 2)
-             printInvalidArguments();
-         
-         if (args[argIndex].equals("-startNr"))
-         {
-             argIndex     += 1;
-             startIndex    = Integer.parseInt(args[argIndex]);
-             argIndex     += 1;
-             if (startIndex < 1)
-                 startIndex = 1;
-         }
-         if (args.length < 2)
-             printInvalidArguments();
-         
-         prefix    = args[argIndex++];
-         directory = args[argIndex++];
-         
-         int extCount = (args.length - argIndex);
-         if (extCount < 0)
-             extCount = 0;
-         String[]  validExtensions = new String [extCount];
-         for (int i = 0;  i < extCount;  i++)
-             validExtensions[i] = args[argIndex++].toUpperCase();
-         
-         File[] directoryContent = new File(directory).listFiles();
-         if (directoryContent == null)
-             directoryContent = new File [0];
-             
-         System.out.println("--------------------------------------------");
-         
-         TreeMap<String, File> fileMap = new TreeMap<String, File>();
-         
-         for (int i = 0;  i < directoryContent.length;   i++)
-             if (directoryContent[i].isFile())
-             {
-                 String fileName = "" + directoryContent[i];
-                 fileName = fileName.toUpperCase();
-                 if (isExtensionValid(fileName, validExtensions))
-                     fileMap.put(fileName, directoryContent[i]);
-             }
-             
-         int  fileNr = startIndex;
-         if (reverseOrder)
-             fileNr = startIndex + fileMap.size() - 1;
-         Iterator iterator = fileMap.keySet().iterator();
-         
-         File[] tmpFiles = new File [fileMap.size()];
-         while (iterator.hasNext())
-         {
-             String oldName = (String) iterator.next();
-             String newName = 
-                 oldName.substring(0, getDirectoryLength(oldName))
-                 + TMP_FILE_PREFIX + prefix 
-                 + intToString(fileNr, 4)
-                 + getFileNameExtension(oldName);
-             int tmpFileIndex = (fileNr - startIndex);
-             tmpFiles[tmpFileIndex] = new File(newName);
-             File file = fileMap.get (oldName);
-             if (!file.renameTo(tmpFiles[tmpFileIndex]))
-                 System.out.println("\n    ERROR: " + newName + "  <-  " + oldName);
-             else
-                 System.out.print(" " + fileNr);
-             fileNr += (reverseOrder ? -1 : 1);    
-         }    
-         System.out.println();
-         System.out.println("--------------------------------------------");
-         for (int i = 0;  i < tmpFiles.length;  i++)
-         {
-             fileNr  = startIndex + i;
-             String oldName = tmpFiles[i].getName();
-             String newName = 
-                 oldName.substring(0, getDirectoryLength(oldName))
-                 + prefix 
-                 + intToString(fileNr, 4)
-                 + getFileNameExtension(oldName);
-             File file = fileMap.get (oldName);
-             if (!tmpFiles[i].renameTo(new File(newName)))
-                 System.out.println("\n    ERROR: " + newName + "  <-  " + oldName);
-             else
-                 System.out.print(" " + fileNr);
-         }    
-         System.out.println();
-         System.out.println("--------------------------------------------");
-         System.out.println("File count: " + fileMap.size());
-    }
     
 } //....EnumerateFiles....//
 //=========================================================================//

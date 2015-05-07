@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import saga.date.Timestamp;
+import saga.util.Timestamp;
 
 public class FileUtilsTest
 {

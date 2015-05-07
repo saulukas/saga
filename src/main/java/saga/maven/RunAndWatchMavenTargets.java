@@ -6,11 +6,11 @@ import static java.util.Arrays.asList;
 import java.util.LinkedList;
 import java.util.List;
 import saga.util.Scanner;
-import saga.util.Script;
-import static saga.util.Script.println;
+import static saga.util.ListUtils.asLinkedList;
 import saga.util.SimpleClassName;
+import static saga.util.SystemOut.println;
 
-public class RunAndWatchMavenTargets extends Script {
+public class RunAndWatchMavenTargets {
 
     public String name() {
         return SimpleClassName.of(getClass());

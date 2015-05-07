@@ -1,5 +1,5 @@
 
-package saga.date;
+package saga.util;
 
 import java.util.Calendar;
 

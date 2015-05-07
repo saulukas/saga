@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import saga.util.Scanner;
-import saga.util.Script;
-import static saga.util.Script.println;
+import static saga.util.ListUtils.asLinkedList;
 import saga.util.SimpleClassName;
+import static saga.util.SystemOut.println;
 
-public class RunAndWatchMavenSources extends Script {
+public class RunAndWatchMavenSources {
 
     public String name() {
         return SimpleClassName.of(getClass());

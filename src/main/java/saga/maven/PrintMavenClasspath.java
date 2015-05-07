@@ -7,11 +7,11 @@ import java.io.LineNumberReader;
 import static java.util.Arrays.asList;
 import java.util.LinkedList;
 import java.util.List;
-import saga.util.Script;
-import static saga.util.Script.println;
+import static saga.util.ListUtils.asLinkedList;
 import saga.util.SimpleClassName;
+import static saga.util.SystemOut.println;
 
-public class PrintMavenClasspath extends Script {
+public class PrintMavenClasspath {
 
     public String name() {
         return SimpleClassName.of(getClass());

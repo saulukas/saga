@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import static saga.util.SystemOut.println;
 
-public class ScannerTest extends Script {
+public class ScannerTest {
 
     public static void main(String[] args) throws IOException {
         Scanner.watch(
