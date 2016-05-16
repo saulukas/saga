@@ -28,14 +28,14 @@ public class LineCount extends Tool
     public static final String SPACE_CHARS = " \t\n\r\f";
 
     //---------------------------------------------------------------------
-    public LineCount() 
+    public LineCount()
     {
-        super("line-count", 
+        super("line-count",
                 "Counts new lines in files with given file name ends.");
     }
     //---------------------------------------------------------------------
     @Override
-    public int run(String[] args) throws Exception 
+    public int run(String[] args) throws Exception
     {
         if (args.length < 2)
         {
@@ -86,7 +86,7 @@ public class LineCount extends Tool
 
 	if (map.size() > 0)
             printStatistics(map);
-        
+
         return 0;
     }
     //---------------------------------------------------------------------
@@ -139,15 +139,11 @@ public class LineCount extends Tool
 	        dirStats.fileCount += 1;
 		dirStats.byteCount += file.length();
 	        String name     = file.getName().toLowerCase();
-	        String fileType = null;
                 for (int i = 0;  i < fileTypes.length;  i++)
                     if (name.endsWith(fileTypes[i]))
 		    {
-		        fileType = fileTypes[i];
-			break;
+		        countFile(file, startDirName, map.get(fileTypes[i]));
 	            }
-		if (fileType != null)
-                    countFile(file, startDirName, map.get(fileType));
             }
     }
     //---------------------------------------------------------------------
