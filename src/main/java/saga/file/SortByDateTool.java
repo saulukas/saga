@@ -9,15 +9,15 @@ import saga.Tool;
 import static saga.util.SystemOut.println;
 import saga.util.Timestamp;
 
-public class SortByDate extends Tool
+public class SortByDateTool extends Tool
 {
 
-    public SortByDate() {
-        super("sort-by-date", "Sorts files recursively by modification date.");
+    public SortByDateTool() {
+        super("sort-by-date", "Sorts files recursively by modification date");
     }
 
     @Override
-    public int run(String[] args) throws Exception 
+    public int run(String[] args) throws Exception
     {
         if (args.length < 1)
         {
@@ -32,7 +32,7 @@ public class SortByDate extends Tool
             return 0;
         }
         boolean descending = "desc".equals(args[0]);
-        
+
         File startDir = new File(".");
         List<File> files = FileUtils.listFiles(startDir, new FileFilter()
         {
@@ -53,7 +53,7 @@ public class SortByDate extends Tool
             Collections.reverse(sorted);
         for (String fileInfo : sorted)
             System.out.println(fileInfo);
-        
+
         return 0;
     }
 }

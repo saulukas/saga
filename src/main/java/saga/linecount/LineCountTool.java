@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------//
 //                                                                         //
 //    PROJECT:      Line count                                             //
-//    FILE:         LineCount.java                                         //
+//    FILE:         LineCountTool.java                                     //
 //    AUTHOR:       saulukas                                               //
 //                                                                         //
 //-------------------------------------------------------------------------//
@@ -19,19 +19,19 @@ import static saga.util.TextUtils.add1000seps;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
-//    LineCount                                                            //
-//    =========                                                            //
+//    LineCountTool                                                        //
+//    =============                                                        //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class LineCount extends Tool
+public class LineCountTool extends Tool
 {
     public static final String SPACE_CHARS = " \t\n\r\f";
 
     //---------------------------------------------------------------------
-    public LineCount()
+    public LineCountTool()
     {
         super("line-count",
-                "Counts new lines in files with given file name ends.");
+                "Counts new lines in files with given file name ends");
     }
     //---------------------------------------------------------------------
     @Override

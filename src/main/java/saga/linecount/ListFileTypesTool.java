@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------//
 //                                                                         //
 //    PROJECT:      Line count                                             //
-//    FILE:         FileTypeCount.java                                     //
+//    FILE:         ListFileTypesTool.java                                 //
 //    AUTHOR:       saulukas                                               //
 //                                                                         //
 //-------------------------------------------------------------------------//
@@ -19,19 +19,19 @@ import static saga.util.TextUtils.add1000seps;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
-//    FileTypeCount                                                        //
-//    =============                                                        //
+//    ListFileTypesTool                                                    //
+//    =================                                                    //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class ListFileTypes extends Tool
+public class ListFileTypesTool extends Tool
 {
     public static final String SPACE_CHARS = " \t\n\r\f";
 
     //---------------------------------------------------------------------
-    public ListFileTypes() 
+    public ListFileTypesTool()
     {
-        super("list-file-types", 
-            "Finds different file name extensions/types and counts them.");
+        super("list-file-types",
+            "Finds different file name extensions/types and counts them");
     }
     //---------------------------------------------------------------------
     @Override
@@ -48,16 +48,16 @@ public class ListFileTypes extends Tool
             println("");
             return 0;
         }
-    
+
         int  argIndex = 0;
         File startDir = new File(args[argIndex++]);
-        
+
         if (!startDir.isDirectory())
         {
             println("Directory not found: " + startDir);
             return 2;
         }
-        
+
 	TreeSet<String> ignore = new TreeSet<>();
 	for (int i = argIndex;  i < args.length;  i++)
 	    if (args[i].startsWith("-ignore"))
@@ -66,13 +66,13 @@ public class ListFileTypes extends Tool
 		if (fileName.length() > 0)
 		    ignore.add(fileName.toLowerCase());
 	    }
-	
+
         TreeMap<String, Statistics> map = new TreeMap<>();
-	    
+
         String startDirName = startDir.getCanonicalPath();
         println(".");
         println(".   startDir : " + startDirName);
-        
+
 	DirStats dirStats = new DirStats();
         countDirectory(startDir, startDirName, map, dirStats, ignore);
 	int fileTypeCount = map.size();
@@ -82,10 +82,10 @@ public class ListFileTypes extends Tool
         println(".   byteCount: " + dirStats.byteCount);
         println(".   fileTypes: " + fileTypeCount);
         println(".");
-	
+
 	if (map.size() > 0)
             printStatistics(map);
-        
+
         return 0;
     }
     //---------------------------------------------------------------------
@@ -108,7 +108,7 @@ public class ListFileTypes extends Tool
         }
     }
     //---------------------------------------------------------------------
-    public static void countDirectory 
+    public static void countDirectory
     (
         File                     directory,
         String                   startDirName,
@@ -129,7 +129,7 @@ public class ListFileTypes extends Tool
 	        dirStats.dirCount += 1;
                 countDirectory(file, startDirName, map, dirStats, ignore);
             }
-            else 
+            else
             {
 	        dirStats.fileCount += 1;
 	        dirStats.byteCount += file.length();
@@ -139,7 +139,7 @@ public class ListFileTypes extends Tool
 		Statistics stats = map.get(fileType);
 		stats.fileCount += 1;
 		stats.byteCount += file.length();
-            }    
+            }
 	}
     }
     //---------------------------------------------------------------------
@@ -159,7 +159,7 @@ public class ListFileTypes extends Tool
 	table[0][0] = "fileType";
 	table[0][1] = "files";
 	table[0][2] = "bytes";
-	
+
         String[] fileTypes = map.keySet().toArray(new String[map.size()]);
 	for (int row = 0;  row < fileTypes.length;  row++)
 	{
@@ -168,7 +168,7 @@ public class ListFileTypes extends Tool
 	    table[row+1][1] = add1000seps("" + stats.fileCount);
 	    table[row+1][2] = add1000seps("" + stats.byteCount);
 	}
-	
+
 	int[] colWidths = getColWidths(table);
 	printSeparatorLine(colWidths);
 	printRow          (colWidths, table[0]);

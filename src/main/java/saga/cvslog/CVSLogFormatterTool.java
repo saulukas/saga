@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------//
 //                                                                         //
 //    PROJECT:      CVS log command output formatting                      //
-//    FILE:         CVSLogFormatter.java                                   //
+//    FILE:         CVSLogFormatterTool.java                               //
 //    AUTHOR:       saulukas                                               //
 //                                                                         //
 //-------------------------------------------------------------------------//
@@ -15,11 +15,11 @@ import saga.util.Version;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
-//    CVSLogFormatter                                                      //
-//    ===============                                                      //
+//    CVSLogFormatterTool                                                  //
+//    ===================                                                  //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class CVSLogFormatter extends Tool
+public class CVSLogFormatterTool extends Tool
 {
     public static final Version VERSION = new Version (1, 2, 0);
     //---------------------------------------------------------------------
@@ -29,7 +29,7 @@ public class CVSLogFormatter extends Tool
 
     public static final int MIN_LINE_WIDTH     = 39;
     public static final int DEFAULT_LINE_WIDTH = 79;
-    
+
     @SuppressWarnings("serial")
     //---------------------------------------------------------------------//
     //                                                                     //
@@ -42,17 +42,17 @@ public class CVSLogFormatter extends Tool
         LineStartNotFoundException(String msg) {super(msg);}
     }
     //---------------------------------------------------------------------//
-    public CVSLogFormatter() 
+    public CVSLogFormatterTool()
     {
-        super("format-cvs-log", "Reads 'cvs log' output from stdin and writes formats to stdout.");
+        super("format-cvs-log", "Reads 'cvs log' output from stdin and writes formatted to stdout");
     }
     //---------------------------------------------------------------------//
     @Override
     public int run(String[] args) throws Exception {
-        PrintStream      writer = System.out;    
-            
+        PrintStream      writer = System.out;
+
         int lineWidth = DEFAULT_LINE_WIDTH;
-        
+
         if (args.length < 1)
         {
             writer.println(name + VERSION + " (c) saga 2009");
@@ -65,26 +65,26 @@ public class CVSLogFormatter extends Tool
             writer.println("");
             return 0;
         }
-        
+
         lineWidth = Integer.parseInt(args[0]);
         if (lineWidth < MIN_LINE_WIDTH)
             lineWidth = MIN_LINE_WIDTH;
-        
-        LineNumberReader reader = 
+
+        LineNumberReader reader =
             new LineNumberReader(new InputStreamReader(System.in));
-            
+
         TreeMap<String, CVSLogItem> tagMap = new TreeMap<String, CVSLogItem>();
-            
+
         CVSLogItem[] items = readItems(reader, tagMap);
 
         Arrays.sort(items);
 /*
-        writer.println("Item count = " + items.length); 
+        writer.println("Item count = " + items.length);
         for (int i = 0;  i < items.length;  i++)
         {
             writer.println(i + ": " + items[i]);
         }
-*/        
+*/
         CVSLogItem prev = null;
         for (int i = 0;  i < items.length;  i++)
         {
@@ -104,14 +104,14 @@ public class CVSLogFormatter extends Tool
             }
             prev = item;
         }
-        
+
         return 0;
     }
     //---------------------------------------------------------------------
     public static void printTagItem
     (
-        PrintStream  writer, 
-        CVSLogItem   item, 
+        PrintStream  writer,
+        CVSLogItem   item,
         int          lineWidth
     )
     {
@@ -124,10 +124,10 @@ public class CVSLogFormatter extends Tool
         writer.println(line);
     }
     //---------------------------------------------------------------------
-    public static void printItemHeader 
+    public static void printItemHeader
     (
-        PrintStream  writer, 
-        CVSLogItem   item, 
+        PrintStream  writer,
+        CVSLogItem   item,
         int          lineWidth
     )
     {
@@ -158,15 +158,15 @@ public class CVSLogFormatter extends Tool
             for (int i = line.length();  i < lineWidth-end.length();  i++)
                 line += " ";
             line += end;
-            writer.println(line);    
+            writer.println(line);
         }
         printSeparator(writer, lineWidth);
     }
     //---------------------------------------------------------------------
-    public static void printItemFile 
+    public static void printItemFile
     (
-        PrintStream  writer, 
-        CVSLogItem   item, 
+        PrintStream  writer,
+        CVSLogItem   item,
         int          lineWidth
     )
     {
@@ -181,8 +181,8 @@ public class CVSLogFormatter extends Tool
     //---------------------------------------------------------------------
     public static void printItemFooter
     (
-        PrintStream  writer, 
-        CVSLogItem   item, 
+        PrintStream  writer,
+        CVSLogItem   item,
         int          lineWidth
     )
     {
@@ -199,13 +199,13 @@ public class CVSLogFormatter extends Tool
     }
     //---------------------------------------------------------------------
     public static CVSLogItem[] readItems (LineNumberReader             reader,
-                                          TreeMap<String, CVSLogItem>  tagMap) 
+                                          TreeMap<String, CVSLogItem>  tagMap)
         throws Exception
     {
         final String RCS_FILE = "RCS file: ";
-    
+
         LinkedList<CVSLogItem> items = new LinkedList<CVSLogItem>();
-        
+
         for (;;)
         {
             try
@@ -221,9 +221,9 @@ public class CVSLogFormatter extends Tool
         }
     }
     //---------------------------------------------------------------------
-    public static void readFileItems (LineNumberReader             reader, 
+    public static void readFileItems (LineNumberReader             reader,
                                       LinkedList<CVSLogItem>       fileItems,
-                                      TreeMap<String, CVSLogItem>  tagMap) 
+                                      TreeMap<String, CVSLogItem>  tagMap)
         throws Exception
     {
         final String WORKING_FILE    = "Working file: ";
@@ -235,9 +235,9 @@ public class CVSLogFormatter extends Tool
         final String LINES           = "lines: ";
         final String COMMENT_END     = "----------------------------";
         final String FILE_END        = "=============================================================================";
-        
+
         TreeMap<String, LinkedList<String>> revTags   = null;
-        
+
         String   fileName       = null;
         String   totalRevisions = null;
         String   revision       = null;
@@ -247,9 +247,9 @@ public class CVSLogFormatter extends Tool
         String   comment        = "";
 
         String   line  = null;
-        
+
         fileName = findLineStart(reader, WORKING_FILE);
-        
+
         line = findLineStart(reader, SYMBOLIC_NAMES);
         line = reader.readLine();
         while (line.startsWith("\t"))
@@ -264,12 +264,12 @@ public class CVSLogFormatter extends Tool
             revTags.get(rev).add(tag);
             line = reader.readLine();
         }
-        
+
         line           = findLineStart(reader, TOTAL_REVISIONS);
         if (line.endsWith("selected revisions: 0"))
             return;
         totalRevisions = getBeforeToken(line, ";");
-        
+
         do
         {
             revision       = findLineStart(reader, REVISION);
@@ -280,11 +280,11 @@ public class CVSLogFormatter extends Tool
             lines          = getAfterToken (line, LINES, "");
             lines          = getBeforeToken(lines, ";");
 
-            comment = ""; 
+            comment = "";
             line = reader.readLine();
             while (!line.startsWith(COMMENT_END) && !line.startsWith(FILE_END))
             {
-                comment += (comment.length() > 0 ? "\n" : "") + line; 
+                comment += (comment.length() > 0 ? "\n" : "") + line;
                 line = reader.readLine();
             }
             if (revTags != null  &&  revTags.containsKey(revision))
@@ -312,7 +312,7 @@ public class CVSLogFormatter extends Tool
         while (!line.startsWith(FILE_END));
     }
     //---------------------------------------------------------------------
-    public static String findLineStart (LineNumberReader reader, 
+    public static String findLineStart (LineNumberReader reader,
                                         String           lineStart)
         throws Exception
     {

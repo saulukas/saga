@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------//
 //                                                                         //
-//    FILE:         PrintJhatInstanceCountDiff.java                        //
+//    FILE:         PrintJhatInstanceCountDiffTool.java                    //
 //    AUTHOR:       saulukas                                               //
 //                                                                         //
 //    Reads two plain-text files, containing query result of JHAT          //
@@ -15,11 +15,11 @@ import saga.Tool;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
-//    PrintJhatInstanceCountDiff                                           //
-//    ==========================                                           //
+//    PrintJhatInstanceCountDiffTool                                       //
+//    ==============================                                       //
 //                                                                         //
 //-------------------------------------------------------------------------//
-public class PrintJhatInstanceCountDiff extends Tool
+public class PrintJhatInstanceCountDiffTool extends Tool
 {
     static final String[] MARKERS = new String []
     {
@@ -45,9 +45,9 @@ public class PrintJhatInstanceCountDiff extends Tool
         {type = t;  count = c;  className = n;}
     }
     //---------------------------------------------------------------------
-    public PrintJhatInstanceCountDiff() 
+    public PrintJhatInstanceCountDiffTool()
     {
-        super("jhat-diff", "Finds diffs in two JHAT instance count outputs.");
+        super("jhat-diff", "Finds diffs in two JHAT instance count outputs");
     }
     //---------------------------------------------------------------------
     public void showUsage ()
@@ -67,7 +67,7 @@ public class PrintJhatInstanceCountDiff extends Tool
     //---------------------------------------------------------------------
     @Override
     public int run(String[] args) throws Exception {
-    
+
         if (args.length < 2)
         {
             showUsage();
@@ -113,7 +113,7 @@ public class PrintJhatInstanceCountDiff extends Tool
 
         System.out.println(SEPARATOR_LINE);
         System.out.println("Classes touched by differences: " + diffCounts.size());
-        
+
         return 0;
     }
     //---------------------------------------------------------------------
