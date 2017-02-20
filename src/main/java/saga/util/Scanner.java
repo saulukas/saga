@@ -32,6 +32,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static saga.util.ExceptionUtils.exception;
+
 /**
  * Scanner
  *
@@ -548,16 +550,16 @@ public class Scanner {
                         scanFile(files[i], scanInfoMap, depth + 1);
                     }
                 } else {
-                    throw new RuntimeException("Error listing files in directory: " + f);
+                    throw exception("Error listing files in directory: " + f);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error scanning watched files", e);
+            throw exception("Error scanning watched files", e);
         }
     }
 
     private void warn(Object listener, String filename, Throwable th) {
-        throw new RuntimeException(listener + " failed on '" + filename, th);
+        throw exception(listener + " failed on '" + filename, th);
     }
 
     /**
@@ -649,7 +651,7 @@ public class Scanner {
                     ((ScanCycleListener) listener).scanStarted(cycle);
                 }
             } catch (Exception e) {
-                throw new RuntimeException(listener + " failed on scan start for cycle " + cycle, e);
+                throw exception(listener + " failed on scan start for cycle " + cycle, e);
             }
         }
     }
@@ -664,7 +666,7 @@ public class Scanner {
                     ((ScanCycleListener) listener).scanEnded(cycle);
                 }
             } catch (Exception e) {
-                throw new RuntimeException(listener + " failed on scan end for cycle " + cycle, e);
+                throw exception(listener + " failed on scan end for cycle " + cycle, e);
             }
         }
     }

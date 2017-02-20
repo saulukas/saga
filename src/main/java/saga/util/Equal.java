@@ -3,7 +3,7 @@ package saga.util;
 
 public class Equal
 {
-    public static boolean areEqual(Object a, Object b)
+    public static boolean equal(Object a, Object b)
     {
         if (a == b)
             return true;

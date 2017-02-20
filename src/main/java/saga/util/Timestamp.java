@@ -156,8 +156,8 @@ public class Timestamp implements Comparable<Timestamp>
         if (!(o instanceof Timestamp))
             return false;
         Timestamp timestamp = (Timestamp) o;
-        return Equal.areEqual(date, timestamp.date)
-            && Equal.areEqual(time, timestamp.time);
+        return Equal.equal(date, timestamp.date)
+            && Equal.equal(time, timestamp.time);
     }
 
     @Override

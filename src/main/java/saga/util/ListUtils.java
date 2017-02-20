@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public class ListUtils {
 
     public static <T> LinkedList<T> asLinkedList(List<T> list) {
@@ -21,6 +23,11 @@ public class ListUtils {
 
     public static String[] arrayOf(List<String> list) {
         return list.toArray(new String[list.size()]);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList() {
+        return (List<T>) new ArrayList<>();
     }
 
 }

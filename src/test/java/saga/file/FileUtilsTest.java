@@ -12,7 +12,7 @@ public class FileUtilsTest
     @Test
     public void shouldPrintProjectFiles()
     {
-        FileUtils.visitFiles(new File("."), new FileVisitor()
+        FileUtils.visitFiles(new File("src/main/java/saga/linecount"), new FileVisitor()
         {
             @Override
             public void visitFile(File file)
@@ -25,14 +25,15 @@ public class FileUtilsTest
     @Test
     public void shouldSortFilesByDate()
     {
-        File startDir = new File(".");
+        File startDir = new File("src/main/java/saga/linecount");
         List<File> files = FileUtils.listFiles(startDir, new FileFilter()
         {
             @Override
             public boolean acceptFile(File file)
             {
                 return file.isFile()
-                    && !file.getAbsolutePath().contains(".svn");
+                    && !file.getAbsolutePath().contains(".svn")
+                    && !file.getAbsolutePath().contains(".git");
             }
         });
         List<String> sorted = new ArrayList<String>();

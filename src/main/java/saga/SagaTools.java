@@ -6,7 +6,7 @@ import java.util.TreeMap;
 import saga.cvslog.CVSLogFormatterTool;
 import saga.rename.RenameFilesTool;
 import saga.file.SortByDateTool;
-import saga.ip.IPAddressTool;
+import saga.ip.IP4AddressTool;
 import saga.jhat.PrintJhatInstanceCountDiffTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
@@ -53,7 +53,7 @@ public class SagaTools {
         registerTool(new SortByDateTool());
         registerTool(new CVSLogFormatterTool());
         registerTool(new PrintJhatInstanceCountDiffTool());
-        registerTool(new IPAddressTool());
+        registerTool(new IP4AddressTool());
     }
 
     static void registerTool(Tool tool) {
