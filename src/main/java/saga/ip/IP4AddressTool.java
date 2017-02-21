@@ -4,6 +4,8 @@ import java.util.List;
 import saga.Tool;
 import saga.util.ArgList;
 
+import static saga.ip.IP4Address.ip4Address;
+import static saga.ip.IP4Subnet.ip4Subnet;
 import static saga.util.ListUtils.newList;
 import static saga.util.SystemOut.println;
 import static saga.util.Equal.equal;
@@ -63,9 +65,9 @@ public class IP4AddressTool extends Tool {
         List<IP4Subnet> ipRanges = newList();
         while (!args.isEmpty() && !equal(args.head(), "contains")) {
             if (IP4Subnet.isValid(args.head())) {
-                ipRanges.add(IP4Subnet.of(args.head()));
+                ipRanges.add(ip4Subnet(args.head()));
             } else if (IP4Address.isValid(args.head())) {
-                ipRanges.add(IP4Subnet.of(IP4Address.of(args.head())));
+                ipRanges.add(ip4Subnet(ip4Address(args.head())));
             } else {
                 throw exception("Expected IP4 address or subnet but found: " + args.head());
             }
@@ -81,7 +83,7 @@ public class IP4AddressTool extends Tool {
     List<IP4Address> doDoReadCandidateIPs(ArgList args) {
         List<IP4Address> candidateList = newList();
         while (!args.isEmpty()) {
-            candidateList.add(IP4Address.of(args.head()));
+            candidateList.add(ip4Address(args.head()));
             args.removeHead();
         }
         return candidateList;

@@ -13,7 +13,7 @@ public class IP4Address {
 
     final int value;
 
-    IP4Address(int value) {
+    private IP4Address(int value) {
         this.value = value;
     }
 
@@ -21,11 +21,15 @@ public class IP4Address {
         return valueOrNull(address) != null;
     }
 
-    public static IP4Address of(String address) {
+    public static IP4Address ip4Address(String address) {
         Integer value = valueOrNull(address);
         if (value == null) {
             throw exception("Invalid IP4 address '" + address + "'. " + PATTERN_DESCRIPTION);
         }
+        return new IP4Address(value);
+    }
+
+    public static IP4Address ip4Address(int value) {
         return new IP4Address(value);
     }
 

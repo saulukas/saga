@@ -1,25 +1,25 @@
 package saga.ip;
 
+import static saga.ip.IP4Address.ip4Address;
 import static saga.util.ExceptionUtils.exception;
 
 public class IP4SubnetMask {
 
-    final int bitCount;
-    final int value;
+    private final int bitCount;
+    private final int value;
 
-    IP4SubnetMask(int bitCount) {
+    private IP4SubnetMask(int bitCount) {
         this.bitCount = bitCount;
         this.value = maskForBitCount(bitCount);
     }
 
-    public static IP4SubnetMask of(int bitCount) {
+    public static IP4SubnetMask ip4SubnetMask(int bitCount) {
         if (bitCount < 1 || bitCount > 32) {
             throw exception("Invalid bitCount '" + bitCount + "'."
                     + " Bit count of IP4 subnet mask must be [1..32]");
         }
         return new IP4SubnetMask(bitCount);
     }
-
 
     public int bitCount() {
         return bitCount;
@@ -30,7 +30,7 @@ public class IP4SubnetMask {
     }
 
     public IP4Address asIP4Address() {
-        return new IP4Address(value);
+        return ip4Address(value);
     }
 
     @Override
