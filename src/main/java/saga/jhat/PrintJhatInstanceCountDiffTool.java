@@ -13,6 +13,8 @@ import java.io.*;
 import java.util.*;
 import saga.Tool;
 
+import static saga.util.ExceptionUtils.ex;
+
 //-------------------------------------------------------------------------//
 //                                                                         //
 //    PrintJhatInstanceCountDiffTool                                       //
@@ -66,7 +68,7 @@ public class PrintJhatInstanceCountDiffTool extends Tool
     }
     //---------------------------------------------------------------------
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) {
 
         if (args.length < 2)
         {
@@ -80,12 +82,12 @@ public class PrintJhatInstanceCountDiffTool extends Tool
         String  fileNameNew = args[1];
 
         System.out.println("Reading old file: " + fileNameOld);
-        Map<String, Long> oldCounts = readObjectCounts(fileNameOld);
+        Map<String, Long> oldCounts = ex(() -> readObjectCounts(fileNameOld));
         System.out.println("    classes: " + oldCounts.size());
         System.out.println("    objects: " + getTotalObjectCount(oldCounts));
 
         System.out.println("Reading new file: " + fileNameNew);
-        Map<String, Long> newCounts = readObjectCounts(fileNameNew);
+        Map<String, Long> newCounts = ex(() -> readObjectCounts(fileNameNew));
         System.out.println("    classes: " + newCounts.size());
         System.out.println("    objects: " + getTotalObjectCount(newCounts));
 

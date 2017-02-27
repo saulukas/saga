@@ -32,7 +32,7 @@ public class RenameFilesTool extends Tool
 
     //---------------------------------------------------------------------
     @Override
-    public int run(String[] args) throws Exception
+    public int run(String[] args)
     {
          if (args.length < 1) {
              println(name + " 1.0, (c) saga 2006");

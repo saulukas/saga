@@ -10,6 +10,6 @@ public abstract class Tool {
         this.oneLineDescription = oneLineDescription;
     }
 
-    public abstract int run(String[] args) throws Exception;
+    public abstract int run(String[] args);
 
 }

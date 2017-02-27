@@ -13,6 +13,8 @@ import saga.Tool;
 
 import saga.util.Version;
 
+import static saga.util.ExceptionUtils.ex;
+
 //-------------------------------------------------------------------------//
 //                                                                         //
 //    CVSLogFormatterTool                                                  //
@@ -21,14 +23,14 @@ import saga.util.Version;
 //-------------------------------------------------------------------------//
 public class CVSLogFormatterTool extends Tool
 {
-    public static final Version VERSION = new Version (1, 2, 0);
+    static final Version VERSION = new Version (1, 2, 0);
     //---------------------------------------------------------------------
     // 1.2    no CVS tag ...
     //        Added Version class.
     //---------------------------------------------------------------------
 
-    public static final int MIN_LINE_WIDTH     = 39;
-    public static final int DEFAULT_LINE_WIDTH = 79;
+    static final int MIN_LINE_WIDTH     = 39;
+    static final int DEFAULT_LINE_WIDTH = 79;
 
     @SuppressWarnings("serial")
     //---------------------------------------------------------------------//
@@ -37,7 +39,7 @@ public class CVSLogFormatterTool extends Tool
     //    ==========================                                       //
     //                                                                     //
     //---------------------------------------------------------------------//
-    public static class LineStartNotFoundException extends Exception
+    static class LineStartNotFoundException extends RuntimeException
     {
         LineStartNotFoundException(String msg) {super(msg);}
     }
@@ -48,7 +50,7 @@ public class CVSLogFormatterTool extends Tool
     }
     //---------------------------------------------------------------------//
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) {
         PrintStream      writer = System.out;
 
         int lineWidth = DEFAULT_LINE_WIDTH;
@@ -75,7 +77,7 @@ public class CVSLogFormatterTool extends Tool
 
         TreeMap<String, CVSLogItem> tagMap = new TreeMap<String, CVSLogItem>();
 
-        CVSLogItem[] items = readItems(reader, tagMap);
+        CVSLogItem[] items = ex(() -> readItems(reader, tagMap));
 
         Arrays.sort(items);
 /*
@@ -108,7 +110,7 @@ public class CVSLogFormatterTool extends Tool
         return 0;
     }
     //---------------------------------------------------------------------
-    public static void printTagItem
+    static void printTagItem
     (
         PrintStream  writer,
         CVSLogItem   item,
@@ -124,7 +126,7 @@ public class CVSLogFormatterTool extends Tool
         writer.println(line);
     }
     //---------------------------------------------------------------------
-    public static void printItemHeader
+    static void printItemHeader
     (
         PrintStream  writer,
         CVSLogItem   item,
@@ -163,7 +165,7 @@ public class CVSLogFormatterTool extends Tool
         printSeparator(writer, lineWidth);
     }
     //---------------------------------------------------------------------
-    public static void printItemFile
+    static void printItemFile
     (
         PrintStream  writer,
         CVSLogItem   item,
@@ -179,7 +181,7 @@ public class CVSLogFormatterTool extends Tool
         writer.println(line);
     }
     //---------------------------------------------------------------------
-    public static void printItemFooter
+    static void printItemFooter
     (
         PrintStream  writer,
         CVSLogItem   item,
@@ -189,7 +191,7 @@ public class CVSLogFormatterTool extends Tool
         printSeparator(writer, lineWidth);
     }
     //---------------------------------------------------------------------
-    public static void printSeparator (PrintStream  writer, int lineWidth)
+    static void printSeparator (PrintStream  writer, int lineWidth)
     {
         writer.print('+');
         for (int i = 0;  i < lineWidth-2;  i++)
@@ -198,9 +200,8 @@ public class CVSLogFormatterTool extends Tool
         writer.println();
     }
     //---------------------------------------------------------------------
-    public static CVSLogItem[] readItems (LineNumberReader             reader,
-                                          TreeMap<String, CVSLogItem>  tagMap)
-        throws Exception
+    static CVSLogItem[] readItems (LineNumberReader              reader,
+                                   TreeMap<String, CVSLogItem>   tagMap) throws Exception
     {
         final String RCS_FILE = "RCS file: ";
 
@@ -221,7 +222,7 @@ public class CVSLogFormatterTool extends Tool
         }
     }
     //---------------------------------------------------------------------
-    public static void readFileItems (LineNumberReader             reader,
+    static void readFileItems (LineNumberReader             reader,
                                       LinkedList<CVSLogItem>       fileItems,
                                       TreeMap<String, CVSLogItem>  tagMap)
         throws Exception
@@ -312,9 +313,8 @@ public class CVSLogFormatterTool extends Tool
         while (!line.startsWith(FILE_END));
     }
     //---------------------------------------------------------------------
-    public static String findLineStart (LineNumberReader reader,
-                                        String           lineStart)
-        throws Exception
+    static String findLineStart (LineNumberReader reader,
+                                 String           lineStart) throws IOException
     {
         String line = reader.readLine();
         while (line != null)
@@ -326,7 +326,7 @@ public class CVSLogFormatterTool extends Tool
         throw new LineStartNotFoundException("" + lineStart);
     }
     //---------------------------------------------------------------------
-    public static String getBeforeToken (String line, String token)
+    static String getBeforeToken (String line, String token)
        throws LineStartNotFoundException
     {
         int i = line.indexOf(token);
@@ -335,13 +335,13 @@ public class CVSLogFormatterTool extends Tool
         return line.substring(0, i);
     }
     //---------------------------------------------------------------------
-    public static String getAfterToken (String line, String token)
+    static String getAfterToken (String line, String token)
        throws LineStartNotFoundException
     {
         return getAfterToken(line, token, null);
     }
     //---------------------------------------------------------------------
-    public static String getAfterToken (String line, String token, String def)
+    static String getAfterToken (String line, String token, String def)
        throws LineStartNotFoundException
     {
         int i = line.indexOf(token);

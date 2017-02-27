@@ -25,6 +25,10 @@ public class ListUtils {
         return list.toArray(new String[list.size()]);
     }
 
+    public static <T> T[] arrayOf(T... array) {
+        return array;
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList() {
         return (List<T>) new ArrayList<>();

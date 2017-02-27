@@ -17,7 +17,7 @@ public class SortByDateTool extends Tool
     }
 
     @Override
-    public int run(String[] args) throws Exception
+    public int run(String[] args)
     {
         if (args.length < 1)
         {

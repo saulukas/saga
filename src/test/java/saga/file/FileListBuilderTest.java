@@ -19,7 +19,7 @@ public class FileListBuilderTest
                     && !file.getAbsolutePath().contains(".svn");
             }
         });
-        FileUtils.visitFiles(new File("."), list);
+        FileUtils.visitFiles(new File("src/test/java/saga/file/u1"), list);
         for (File file : list.getFiles())
             System.out.println("   " + file);
     }

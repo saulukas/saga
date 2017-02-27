@@ -11,11 +11,13 @@ package saga.linecount;
 import java.io.*;
 import java.util.*;
 import saga.Tool;
+
 import static saga.util.StringTable.getColWidths;
 import static saga.util.StringTable.printRow;
 import static saga.util.StringTable.printSeparatorLine;
 import static saga.util.SystemOut.println;
 import static saga.util.TextUtils.add1000seps;
+import static saga.util.ExceptionUtils.ex;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
@@ -35,7 +37,7 @@ public class ListFileTypesTool extends Tool
     }
     //---------------------------------------------------------------------
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) {
         if (args.length < 1)
         {
             println(name + " 1.02, (c) saga 2008");
@@ -69,12 +71,12 @@ public class ListFileTypesTool extends Tool
 
         TreeMap<String, Statistics> map = new TreeMap<>();
 
-        String startDirName = startDir.getCanonicalPath();
+        String startDirName = ex(startDir::getCanonicalPath);
         println(".");
         println(".   startDir : " + startDirName);
 
 	DirStats dirStats = new DirStats();
-        countDirectory(startDir, startDirName, map, dirStats, ignore);
+        ex(() -> {countDirectory(startDir, startDirName, map, dirStats, ignore);});
 	int fileTypeCount = map.size();
 
         println(".   dirCount : " + dirStats.dirCount);

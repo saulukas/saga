@@ -11,11 +11,14 @@ package saga.linecount;
 import java.io.*;
 import java.util.*;
 import saga.Tool;
+import saga.util.RunnableWithExceptions;
+
 import static saga.util.StringTable.getColWidths;
 import static saga.util.StringTable.printRow;
 import static saga.util.StringTable.printSeparatorLine;
 import static saga.util.SystemOut.println;
 import static saga.util.TextUtils.add1000seps;
+import static saga.util.ExceptionUtils.ex;
 
 //-------------------------------------------------------------------------//
 //                                                                         //
@@ -35,7 +38,7 @@ public class LineCountTool extends Tool
     }
     //---------------------------------------------------------------------
     @Override
-    public int run(String[] args) throws Exception
+    public int run(String[] args)
     {
         if (args.length < 2)
         {
@@ -64,7 +67,7 @@ public class LineCountTool extends Tool
         for (;  argIndex < args.length;  argIndex++)
             map.put(args[argIndex].toLowerCase(), new Statistics());
 
-        String startDirName = startDir.getCanonicalPath();
+        String startDirName = ex(startDir::getCanonicalPath);
         println(".");
         println(".   startDir : " + startDirName);
 
@@ -124,9 +127,8 @@ public class LineCountTool extends Tool
         TreeMap<String, Statistics>  map,
 	DirStats                     dirStats
     )
-        throws IOException
     {
-        String[] fileTypes = map.keySet().toArray(new String[map.size()]);
+        final String[] fileTypes = map.keySet().toArray(new String[map.size()]);
         File  [] files     = directory.listFiles();
         for (File file : files)
             if (file.isDirectory())
@@ -142,7 +144,8 @@ public class LineCountTool extends Tool
                 for (int i = 0;  i < fileTypes.length;  i++)
                     if (name.endsWith(fileTypes[i]))
 		    {
-		        countFile(file, startDirName, map.get(fileTypes[i]));
+                        Statistics typeStatistics = map.get(fileTypes[i]);
+		        ex(() -> {countFile(file, startDirName, typeStatistics);});
 	            }
             }
     }

@@ -4,21 +4,20 @@ import java.util.List;
 import saga.Tool;
 import saga.util.ArgList;
 
-import static saga.ip.IP4Address.ip4Address;
-import static saga.ip.IP4Subnet.ip4Subnet;
 import static saga.util.ListUtils.newList;
 import static saga.util.SystemOut.println;
 import static saga.util.Equal.equal;
 import static saga.util.ExceptionUtils.exception;
+import static saga.ip.IPAddress.of;
 
-public class IP4AddressTool extends Tool {
+public class IPTool extends Tool {
 
-    public IP4AddressTool() {
-        super("ip4", "IP v4 addresses and subnets");
+    public IPTool() {
+        super("ip", "IP v4 addresses and subnets");
     }
 
     @Override
-    public int run(String[] argArray) throws Exception {
+    public int run(String[] argArray) {
         ArgList args = ArgList.of(argArray);
         if (args.isEmpty()) {
             printUsage();
@@ -54,20 +53,20 @@ public class IP4AddressTool extends Tool {
     }
 
     int doCheckIPRanges(ArgList arg) {
-        List<IP4Subnet> ipRanges = doDoReadIPRanges(arg);
-        List<IP4Address> candidateList = doDoReadCandidateIPs(arg);
+        List<IPSubnet> ipRanges = doDoReadIPRanges(arg);
+        List<IPAddress> candidateList = doDoReadCandidateIPs(arg);
         println(ipRanges);
         println(candidateList);
         return 0;
     }
 
-    List<IP4Subnet> doDoReadIPRanges(ArgList args) throws RuntimeException {
-        List<IP4Subnet> ipRanges = newList();
+    List<IPSubnet> doDoReadIPRanges(ArgList args) throws RuntimeException {
+        List<IPSubnet> ipRanges = newList();
         while (!args.isEmpty() && !equal(args.head(), "contains")) {
-            if (IP4Subnet.isValid(args.head())) {
-                ipRanges.add(ip4Subnet(args.head()));
-            } else if (IP4Address.isValid(args.head())) {
-                ipRanges.add(ip4Subnet(ip4Address(args.head())));
+            if (IPSubnet.isValid(args.head())) {
+                ipRanges.add(IPSubnet.of(args.head()));
+            } else if (IPAddress.isValid(args.head())) {
+                ipRanges.add(IPSubnet.of(IPAddress.of(args.head())));
             } else {
                 throw exception("Expected IP4 address or subnet but found: " + args.head());
             }
@@ -80,10 +79,10 @@ public class IP4AddressTool extends Tool {
         return ipRanges;
     }
 
-    List<IP4Address> doDoReadCandidateIPs(ArgList args) {
-        List<IP4Address> candidateList = newList();
+    List<IPAddress> doDoReadCandidateIPs(ArgList args) {
+        List<IPAddress> candidateList = newList();
         while (!args.isEmpty()) {
-            candidateList.add(ip4Address(args.head()));
+            candidateList.add(of(args.head()));
             args.removeHead();
         }
         return candidateList;

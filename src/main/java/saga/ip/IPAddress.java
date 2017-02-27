@@ -6,14 +6,14 @@ import java.util.regex.Pattern;
 import static java.util.regex.Pattern.compile;
 import static saga.util.ExceptionUtils.exception;
 
-public class IP4Address {
+public class IPAddress {
 
     static Pattern PATTERN = compile("^(\\d{1,3}).(\\d{1,3}).(\\d{1,3}).(\\d{1,3})$");
     static String PATTERN_DESCRIPTION = "IP4 address must be 'nnn.nnn.nnn.nnn' where nnn is number [0..255]";
 
     final int value;
 
-    private IP4Address(int value) {
+    private IPAddress(int value) {
         this.value = value;
     }
 
@@ -21,16 +21,16 @@ public class IP4Address {
         return valueOrNull(address) != null;
     }
 
-    public static IP4Address ip4Address(String address) {
+    public static IPAddress of(String address) {
         Integer value = valueOrNull(address);
         if (value == null) {
             throw exception("Invalid IP4 address '" + address + "'. " + PATTERN_DESCRIPTION);
         }
-        return new IP4Address(value);
+        return new IPAddress(value);
     }
 
-    public static IP4Address ip4Address(int value) {
-        return new IP4Address(value);
+    public static IPAddress of(int value) {
+        return new IPAddress(value);
     }
 
     @Override
