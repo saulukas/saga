@@ -128,7 +128,7 @@ public class LineCountTool extends Tool
 	DirStats                     dirStats
     )
     {
-        final String[] fileTypes = map.keySet().toArray(new String[map.size()]);
+        String[] fileTypes = map.keySet().toArray(new String[map.size()]);
         File  [] files     = directory.listFiles();
         for (File file : files)
             if (file.isDirectory())
