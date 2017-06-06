@@ -10,6 +10,7 @@ import saga.ip.IPTool;
 import saga.jhat.PrintJhatInstanceCountDiffTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
+import saga.yaml.YamlTool;
 
 import static saga.util.ListUtils.listOf;
 import static saga.util.SystemOut.print;
@@ -54,6 +55,7 @@ public class SagaTools {
         registerTool(new CVSLogFormatterTool());
         registerTool(new PrintJhatInstanceCountDiffTool());
         registerTool(new IPTool());
+        registerTool(new YamlTool());
     }
 
     static void registerTool(Tool tool) {
