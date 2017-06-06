@@ -20,7 +20,6 @@ import static saga.util.ListUtils.arrayOf;
 
 public class SagaTools {
 
-    static int maxNameLength = 0;
     static Map<String, Tool> name2toolMap = new TreeMap<>();
 
     public static void main(String[] args) {
@@ -60,7 +59,14 @@ public class SagaTools {
 
     static void registerTool(Tool tool) {
         name2toolMap.put(tool.name, tool);
-        maxNameLength = Math.max(maxNameLength, tool.name.length());
+    }
+
+    static int maxToolNameLength() {
+        int max = 0;
+        for (Tool tool : name2toolMap.values()) {
+            max = Math.max(max, tool.name.length());
+        }
+        return max;
     }
 
     static void printUsage() {
@@ -84,8 +90,9 @@ public class SagaTools {
     }
 
     static void printAvailableTools() {
+        int maxLength = maxToolNameLength();
         name2toolMap.values().forEach((tool) -> {
-            print("\n    " + alignLeft(tool.name + " ", maxNameLength + 1, '.')
+            print("\n    " + alignLeft(tool.name + " ", maxLength + 1, '.')
                     + ".... " + tool.oneLineDescription);
         });
     }
