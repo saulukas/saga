@@ -82,8 +82,7 @@ public class IPTool extends Tool {
     List<IPAddress> doDoReadCandidateIPs(ArgList args) {
         List<IPAddress> candidateList = newList();
         while (!args.isEmpty()) {
-            candidateList.add(of(args.head()));
-            args.removeHead();
+            candidateList.add(of(args.removeHead()));
         }
         return candidateList;
     }

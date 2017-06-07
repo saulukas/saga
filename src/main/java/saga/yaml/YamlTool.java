@@ -1,9 +1,7 @@
 package saga.yaml;
 
 import java.io.*;
-import java.util.Iterator;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.events.Event;
 import org.yaml.snakeyaml.events.ScalarEvent;
 import saga.Tool;
 import saga.util.ArgList;
@@ -25,8 +23,7 @@ public class YamlTool extends Tool {
             return 0;
         }
 
-        String yamlFileName = args.head();
-        args.removeHead();
+        String yamlFileName = args.removeHead();
 
         ex(() -> {
             Reader input = new InputStreamReader(new FileInputStream(yamlFileName), "UTF-8");
@@ -35,7 +32,7 @@ public class YamlTool extends Tool {
             output.flush();
         });
 
-        return -1;
+        return 0;
     }
 
     void printUsage() {

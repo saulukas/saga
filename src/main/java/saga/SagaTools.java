@@ -10,6 +10,7 @@ import saga.ip.IPTool;
 import saga.jhat.PrintJhatInstanceCountDiffTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
+import saga.tabs.TabsTool;
 import saga.yaml.YamlTool;
 
 import static saga.util.ListUtils.listOf;
@@ -55,6 +56,7 @@ public class SagaTools {
         registerTool(new PrintJhatInstanceCountDiffTool());
         registerTool(new IPTool());
         registerTool(new YamlTool());
+        registerTool(new TabsTool());
     }
 
     static void registerTool(Tool tool) {

@@ -29,10 +29,10 @@ public class HeadList<T> {
         return list.get(0);
     }
 
-    public void removeHead() {
+    public T removeHead() {
         if (isEmpty()) {
             throw exception(getClass().getSimpleName() + " is empty.");
         }
-        list.remove(0);
+        return list.remove(0);
     }
 }
