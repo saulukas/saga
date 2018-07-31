@@ -59,25 +59,56 @@ public class IPTool extends Tool {
         println("");
         println("Parameters:");
         println("");
-        println("    print  ips-and-subnets                              - prints in binary");
-        println("    check  ips-and-subnets  'contains'  ips-and-subnets - under construction");
+        println("    print  ips-and-subnets                   - prints in binary");
+        println("    check  ips-and-subnets  'contains'  ips  - prints ips-and-subnets which contain given ips");
         println("");
     }
 
-    int doCheckIPRanges(ArgList arg) {
-        List<IPSubnet> ipRanges = doDoReadIPRanges(arg);
-        List<IPAddress> candidateList = doDoReadCandidateIPs(arg);
-        println(ipRanges);
-        println(candidateList);
-        return 0;
+    int doCheckIPRanges(ArgList args) {
+        List<IPSubnet> ipRanges = doDoReadIPRanges(args);
+        if (args.isEmpty() || !equal(args.head(), "contains")) {
+            throw exception("Expected 'contains' after IPs and subnets.");
+        }
+        args.removeHead();
+        List<IPAddress> candidateList = doDoReadIPAddresses(args);
+
+        print(ipRanges);
+
+        boolean allAreContained = true;
+        for (IPAddress address : candidateList) {
+            boolean isContained = false;
+            println("");
+            println("");
+            print(address);
+            for (IPSubnet subnet : ipRanges) {
+                if (subnet.conains(address)) {
+                    isContained = true;
+                    println("  --------------- ---------   ---------   ---------   ---------");
+                    print(subnet);
+                }
+            }
+            if (!isContained) {
+                println("  --------------- is not contained !!! ------------------------");
+            }
+            allAreContained = allAreContained && isContained;
+        }
+        println("");
+
+        return allAreContained ? 0 : 1;
     }
 
     List<IPSubnet> doDoReadIPRanges(ArgList args) {
         if (args.isEmpty()) {
             throw exception("Expected comma-separated IP4 addresses and subnet masks.");
         }
-        String commaSeparatedIps = args.removeHead();
-        return doGetIPRangesFrom(commaSeparatedIps);
+        return doGetIPRangesFrom(args.removeHead());
+    }
+
+    List<IPAddress> doDoReadIPAddresses(ArgList args) {
+        if (args.isEmpty()) {
+            throw exception("Expected comma-separated IP4 addresses.");
+        }
+        return doGetIPsFrom(args.removeHead());
     }
 
     static List<IPSubnet> doGetIPRangesFrom(String commaSeparatedIps) {
@@ -95,35 +126,49 @@ public class IPTool extends Tool {
         return ipRanges;
     }
 
-    List<IPAddress> doDoReadCandidateIPs(ArgList args) {
-        List<IPAddress> candidateList = newList();
-        while (!args.isEmpty()) {
-            candidateList.add(of(args.removeHead()));
+    static List<IPAddress> doGetIPsFrom(String commaSeparatedIps) {
+        List<String> ipStrings = asList(commaSeparatedIps.split("\\,"));
+        List<IPAddress> ipAddresses = newList();
+        for (String ipString : ipStrings) {
+            if (IPAddress.isValid(ipString)) {
+                ipAddresses.add(IPAddress.of(ipString));
+            } else {
+                throw exception("Expected IP4 address but found: " + ipString);
+            }
         }
-        return candidateList;
+        return ipAddresses;
     }
 
     int doPrintIPs(ArgList args) {
         List<IPSubnet> ipRanges = doDoReadIPRanges(args);
+        print(ipRanges);
+        return 0;
+    }
+
+    private void print(IPAddress address) {
+        println("  " + alignLeft("" + address, 15) + " " + address.asBinaryString());
+    }
+
+    private void print(IPMask mask) {
+        println("  " + alignRight("/" + mask.bitCount(), 15) + " " + mask.asBinaryString()
+        );
+    }
+
+    private void print(IPSubnet subnet) {
+        print(subnet.address());
+        if (!subnet.isSingleAddress()) {
+            print(subnet.mask());
+        }
+    }
+
+    private void print(List<IPSubnet> subnets) {
         println("");
         println("                  ---------   ---------   ---------   ---------");
-        ipRanges.forEach(range -> {
-            println("  "
-                    + alignLeft("" + range.address(), 15)
-                    + " "
-                    + range.address().asBinaryString()
-            );
-            if (!range.isSingleAddress()) {
-                println("  "
-                        + alignRight("/" + range.mask().bitCount(), 15)
-                        + " "
-                        + range.mask().asBinaryString()
-                );
-            }
+        subnets.forEach(subnet -> {
+            print(subnet);
         });
         println("                  ---------   ---------   ---------   ---------");
         println("");
-        return 0;
     }
 
 }
