@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static saga.TestUtils.check;
+import static saga.ip.IPAddress.binaryStringOf;
 import static saga.util.SystemOut.println;
 
 public class IPAddressTest {
@@ -50,6 +51,12 @@ public class IPAddressTest {
             check(ex.getMessage().contains(IPAddress.PATTERN_DESCRIPTION));
             println(ex.getMessage());
         }
+    }
+
+    @Test
+    public void asBinaryString_creates_readable_binary_representation() {
+        assertEquals(IPAddress.of("10.20.30.40").asBinaryString(),
+                "0000 1010   0001 0100   0001 1110   0010 1000");
     }
 
 }

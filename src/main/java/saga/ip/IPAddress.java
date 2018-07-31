@@ -9,7 +9,8 @@ import static saga.util.ExceptionUtils.exception;
 public class IPAddress {
 
     static Pattern PATTERN = compile("^(\\d{1,3}).(\\d{1,3}).(\\d{1,3}).(\\d{1,3})$");
-    static String PATTERN_DESCRIPTION = "IP4 address must be 'nnn.nnn.nnn.nnn' where nnn is number [0..255]";
+    static String PATTERN_DESCRIPTION =
+            "IP4 address must be 'nnn.nnn.nnn.nnn' where nnn is number [0..255]";
 
     final int value;
 
@@ -31,6 +32,10 @@ public class IPAddress {
 
     public static IPAddress of(int value) {
         return new IPAddress(value);
+    }
+
+    public String asBinaryString() {
+        return binaryStringOf(value);
     }
 
     @Override
@@ -76,6 +81,24 @@ public class IPAddress {
         int shiftLeftByBits = 8 * (3 - index);
         int octet = (value >> shiftLeftByBits) & 0xFF;
         return octet;
+    }
+
+    static String binaryStringOf(int value) {
+        String result = "";
+        for (int i = 0; i < 4; i++) {
+            int octet = octetOf(value, i);
+            result += (i > 0 ? "   " : "")
+                    + ((octet & 0b10000000) > 0 ? "1" : "0")
+                    + ((octet & 0b01000000) > 0 ? "1" : "0")
+                    + ((octet & 0b00100000) > 0 ? "1" : "0")
+                    + ((octet & 0b00010000) > 0 ? "1" : "0")
+                    + " "
+                    + ((octet & 0b00001000) > 0 ? "1" : "0")
+                    + ((octet & 0b00000100) > 0 ? "1" : "0")
+                    + ((octet & 0b00000010) > 0 ? "1" : "0")
+                    + ((octet & 0b00000001) > 0 ? "1" : "0");
+        }
+        return result;
     }
 
 }

@@ -1,5 +1,6 @@
 package saga.ip;
 
+import static saga.ip.IPAddress.binaryStringOf;
 import static saga.util.ExceptionUtils.exception;
 
 public class IPMask {
@@ -30,6 +31,10 @@ public class IPMask {
 
     public IPAddress asIPAddress() {
         return IPAddress.of(value);
+    }
+
+    public String asBinaryString() {
+        return binaryStringOf(value);
     }
 
     @Override
