@@ -1,11 +1,9 @@
 package saga.tabs;
 
 import java.io.*;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.events.ScalarEvent;
 import saga.Tool;
 import saga.util.ArgList;
-import saga.yaml.YamlEventSource;
+import saga.util.TextUtils;
 
 import static saga.util.ExceptionUtils.ex;
 import static saga.util.SystemOut.println;
@@ -24,41 +22,48 @@ public class TabsTool extends Tool {
             return 0;
         }
 
-        int spaceCount;
-        String spaceCountText = args.removeHead();
+        int tabSize;
+        String tabSizeText = args.removeHead();
         try {
-            spaceCount = Integer.parseInt(spaceCountText);
+            tabSize = Integer.parseInt(tabSizeText);
         } catch (NumberFormatException ex) {
-            throw new RuntimeException("Expected space character count, but found: " + spaceCountText);
+            throw new RuntimeException("Expected tab size, but found: " + tabSizeText);
         }
-        if (spaceCount < 1) {
-            throw new RuntimeException("Space character count must be >= 1");
+        if (tabSize < 1) {
+            throw new RuntimeException("Tab size must be >= 1");
         }
 
-        convertTabsToSpaces(spaceCount);
+        convertTabsToSpaces(tabSize);
 
         return 0;
     }
 
-    private void convertTabsToSpaces(int spaceCount) {
+    static private void convertTabsToSpaces(int tabSize) {
         ex(() -> {
-            String spaces = "";
-            for (int i = 0;  i < spaceCount;  i++) {
-                spaces += " ";
-            }
             Reader input = new InputStreamReader(System.in);
             Writer output = new OutputStreamWriter(System.out);
-            int symbol = input.read();
-            while (symbol != -1) { // end-of-file
-                if (symbol == '\t') {
-                    output.write(spaces);
-                } else {
-                    output.write(symbol);
-                }
-                symbol = input.read();
-            }
+            convertTabsToSpaces(tabSize, input, output);
             output.flush();
         });
+    }
+
+    static void convertTabsToSpaces(int tabSize, Reader input, Writer output) throws IOException {
+        int col = 0;
+        int symbol = input.read();
+        while (symbol != -1) { // end-of-file
+            if (symbol == '\r' || symbol == '\n') {
+                output.write(symbol);
+                col = 0;
+            } else if (symbol == '\t') {
+                int spaceCount = tabSize - (col % tabSize);
+                output.write(TextUtils.fillChar(' ', spaceCount));
+                col += spaceCount;
+            } else {
+                output.write(symbol);
+                col += 1;
+            }
+            symbol = input.read();
+        }
     }
 
     void printUsage() {
