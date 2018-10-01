@@ -8,6 +8,7 @@ import saga.rename.RenameFilesTool;
 import saga.file.SortByDateTool;
 import saga.ip.IPTool;
 import saga.jhat.PrintJhatInstanceCountDiffTool;
+import saga.jwplayer.JWPlayerTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
 import saga.tabs.TabsTool;
@@ -24,6 +25,7 @@ public class SagaTools {
     static Map<String, Tool> name2toolMap = new TreeMap<>();
 
     public static void main(String[] args) {
+
         registerAllTools();
         List<String> argList = listOf(args);
         if (argList.isEmpty()) {
@@ -57,6 +59,7 @@ public class SagaTools {
         registerTool(new IPTool());
         registerTool(new YamlTool());
         registerTool(new TabsTool());
+        registerTool(new JWPlayerTool());
     }
 
     static void registerTool(Tool tool) {
