@@ -4,10 +4,13 @@ import java.io.*;
 import saga.Tool;
 import saga.util.ArgList;
 
+import static java.util.Arrays.asList;
 import static saga.util.SystemOut.println;
 import static saga.util.Equal.equal;
 import static saga.util.ExceptionUtils.exception;
 import static saga.util.SystemOut.print;
+import static saga.util.TextUtils.alignRight;
+import static saga.util.TextUtils.joinUsing;
 
 public class JWPlayerTool extends Tool {
 
@@ -41,8 +44,8 @@ public class JWPlayerTool extends Tool {
         println("");
         println("Parameters:");
         println("");
-        println("    print <video-ts-fragment-url>   - print URL of whole chunklist");
-        println("    curl  <video-ts-fragment-url>   - download and pring chunklist using unix curl");
+        println("    print <video-ts-fragment-url>                  - print URL of whole chunklist");
+        println("    curl  <video-ts-fragment-url>  <output-folder> - download chunklist and create bash scripts for video download");
         println("");
     }
 
@@ -54,10 +57,10 @@ public class JWPlayerTool extends Tool {
     }
 
     int printChunklistUrl(ArgList args) {
+
         if (args.isEmpty()) {
             throw exception("Expected <video-ts-fragment-url>.");
         }
-
         VideoUrls urls = extractVideoUrlsFrom(args.removeHead());
 
         println("curl \"" + urls.chunklistUrl + "\"");
@@ -66,46 +69,66 @@ public class JWPlayerTool extends Tool {
     }
 
     int downloadChunklistFile(ArgList args) throws Exception {
+
         if (args.isEmpty()) {
             throw exception("Expected <video-ts-fragment-url>.");
         }
-
         VideoUrls urls = extractVideoUrlsFrom(args.removeHead());
 
-        String chunklistFileName = "jwp-" + urls.chunklistId + "-chunkList.m3u8";
-        int rc = download(urls.chunklistUrl, chunklistFileName);
-        if (rc != 0) {
-            throw exception("Failed to curl-download " + urls.chunklistUrl);
+        if (args.isEmpty()) {
+            throw exception("Expected <output-folder>.");
         }
+        String outputFolderName = args.removeHead();
+
+        return doDownloadChunklist(urls, outputFolderName);
+    }
+
+    private int doDownloadChunklist(VideoUrls urls, String outputFolderName) throws Exception {
+
+        createDirectory(outputFolderName);
+        String dir = outputFolderName + "/";
+        String videoName = outputFolderName;
+
+        String chunklistFileName = videoName + ".m3u8";
+        executeProcess("curl", urls.chunklistUrl, "-o", dir + chunklistFileName);
         println("");
         println("   See chunklist in file: " + chunklistFileName);
 
-        String downloadScriptFileName = "jwp-" + urls.chunklistId + "-download.sh";
-        String concatScriptFileName = "jwp-" + urls.chunklistId + "-concat.sh";
-        String outputVideoFileName = "jwp-" + urls.chunklistId + ".ts";
+        String downloadScriptFileName = videoName + "-download.sh";
+        String concatScriptFileName = videoName + "-concat.sh";
+        String ffmpegScriptFileName = videoName + "-ffmpeg.cmd"; // no ffmpeg on my unix, only windows
+        String outputVideoFileName = videoName + ".ts";
         int chunkCount = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(chunklistFileName));
-                Writer downloadScript = new FileWriter(downloadScriptFileName);
-                Writer concatScript = new FileWriter(concatScriptFileName);) {
+        try (
+                BufferedReader reader = new BufferedReader(new FileReader(dir + chunklistFileName));
+                Writer downloadScript = new FileWriter(dir + downloadScriptFileName);
+                Writer concatScript = new FileWriter(dir + concatScriptFileName);
+                Writer ffmpegScript = new FileWriter(dir + ffmpegScriptFileName);
+                ) {
             downloadScript.write("#!/bin/bash -e\n");
             concatScript.write("#!/bin/bash -e\n");
             concatScript.write("cat \\\n");
+            ffmpegScript.write("ffmpeg -i \"concat");
+            String ffmpegDelimiter = ":";
             String line = "";
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("media_")) {
                     chunkCount += 1;
                     String fragmentUrl = "\"" + urls.directoryUrl + "/" + line + "\"";
-                    String outputFileName = "\"" + line + "\"";
+                    String outputFileName = line;
                     downloadScript.write("curl " + fragmentUrl + " -o " + outputFileName + "\n");
                     concatScript.write(outputFileName + " \\\n");
+                    ffmpegScript.write(ffmpegDelimiter + outputFileName);
+                    ffmpegDelimiter = "|";
                 }
             }
             concatScript.write("> \"" + outputVideoFileName + "\" \n");
+            ffmpegScript.write("\" -c copy " + outputVideoFileName + "\n");
         }
         println("   Run download script:   " + downloadScriptFileName);
 
-        String doAllScriptName = "jwp-" + urls.chunklistId + "-all.sh";
-        try (Writer doAllScript = new FileWriter(doAllScriptName)) {
+        String doAllScriptName = videoName + "-all.sh";
+        try (Writer doAllScript = new FileWriter(dir + doAllScriptName)) {
             doAllScript.write("#!/bin/bash -e\n");
             doAllScript.write("echo ............................\n");
             doAllScript.write("echo .     chunk count: " + chunkCount + "\n");
@@ -115,7 +138,7 @@ public class JWPlayerTool extends Tool {
             doAllScript.write("echo .     merging " + chunkCount + " chunks into \"" + outputVideoFileName + "\"\n");
             doAllScript.write("echo ............................\n");
             doAllScript.write("bash ./" + concatScriptFileName + "\n");
-            doAllScript.write("rm -f media_" + urls.chunklistId + "_*.ts \n");
+            doAllScript.write("#rm -f media_" + urls.chunklistId + "_*.ts \n");
         }
         println("   Or do all with:        bash " + doAllScriptName);
         println("");
@@ -123,17 +146,30 @@ public class JWPlayerTool extends Tool {
         return 0;
     }
 
-    private int download(String inputUrl, String outputFileName) throws Exception {
-        ProcessBuilder processBuilder = new ProcessBuilder("curl", inputUrl, "-o", outputFileName);
+    private File createDirectory(String folderName) throws RuntimeException {
+        File folder = new File(folderName);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        if (!folder.exists() || !folder.isDirectory()) {
+            throw exception("Failed to create directory: " + folderName);
+        }
+        return folder;
+    }
+
+    private void executeProcess(String... args) throws Exception {
+        ProcessBuilder processBuilder = new ProcessBuilder(args);
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
         String line = "";
-        print("\n");
         BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
         while ((line = stdout.readLine()) != null) {
             print(line + "\n");
         }
-        return process.waitFor();
+        int rc = process.waitFor();
+        if (rc != 0) {
+            throw exception("Failed to execute: " + joinUsing(" ", args));
+        }
     }
 
     static VideoUrls extractVideoUrlsFrom(String tsFragmentUrl) {
