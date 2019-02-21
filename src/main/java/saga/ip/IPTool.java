@@ -9,7 +9,6 @@ import static saga.util.ListUtils.newList;
 import static saga.util.SystemOut.println;
 import static saga.util.Equal.equal;
 import static saga.util.ExceptionUtils.exception;
-import static saga.ip.IPAddress.of;
 import static saga.util.TextUtils.alignLeft;
 import static saga.util.TextUtils.alignRight;
 

@@ -63,7 +63,15 @@ public class JWPlayerTool extends Tool {
         }
         VideoUrls urls = extractVideoUrlsFrom(args.removeHead());
 
-        println("curl \"" + urls.chunklistUrl + "\"");
+        println("");
+        println("   Download chunklist with:");
+        println("");
+        println("       curl " + urls.chunklistUrl);
+        println("");
+        println("   Or download and join video fragments with:");
+        println("");
+        println("       ffmpeg -i " + urls.chunklistUrl + " -c copy  a-my-video.ts");
+        println("");
 
         return 0;
     }
@@ -92,55 +100,34 @@ public class JWPlayerTool extends Tool {
         String chunklistFileName = videoName + ".m3u8";
         executeProcess("curl", urls.chunklistUrl, "-o", dir + chunklistFileName);
         println("");
-        println("   See chunklist in file: " + chunklistFileName);
+        println("   See chunklist in file : " + chunklistFileName);
 
         String downloadScriptFileName = videoName + "-download.sh";
-        String concatScriptFileName = videoName + "-concat.sh";
         String ffmpegScriptFileName = videoName + "-ffmpeg.cmd"; // no ffmpeg on my unix, only windows
         String outputVideoFileName = videoName + ".ts";
-        int chunkCount = 0;
         try (
                 BufferedReader reader = new BufferedReader(new FileReader(dir + chunklistFileName));
-                Writer downloadScript = new FileWriter(dir + downloadScriptFileName);
-                Writer concatScript = new FileWriter(dir + concatScriptFileName);
-                Writer ffmpegScript = new FileWriter(dir + ffmpegScriptFileName);
-                ) {
+                Writer downloadScript = new FileWriter(dir + downloadScriptFileName);) {
             downloadScript.write("#!/bin/bash -e\n");
-            concatScript.write("#!/bin/bash -e\n");
-            concatScript.write("cat \\\n");
-            ffmpegScript.write("ffmpeg -i \"concat");
-            String ffmpegDelimiter = ":";
             String line = "";
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("media_")) {
-                    chunkCount += 1;
                     String fragmentUrl = "\"" + urls.directoryUrl + "/" + line + "\"";
                     String outputFileName = line;
                     downloadScript.write("curl " + fragmentUrl + " -o " + outputFileName + "\n");
-                    concatScript.write(outputFileName + " \\\n");
-                    ffmpegScript.write(ffmpegDelimiter + outputFileName);
-                    ffmpegDelimiter = "|";
                 }
             }
-            concatScript.write("> \"" + outputVideoFileName + "\" \n");
-            ffmpegScript.write("\" -c copy " + outputVideoFileName + "\n");
         }
-        println("   Run download script:   " + downloadScriptFileName);
 
-        String doAllScriptName = videoName + "-all.sh";
-        try (Writer doAllScript = new FileWriter(dir + doAllScriptName)) {
-            doAllScript.write("#!/bin/bash -e\n");
-            doAllScript.write("echo ............................\n");
-            doAllScript.write("echo .     chunk count: " + chunkCount + "\n");
-            doAllScript.write("echo ............................\n");
-            doAllScript.write("bash ./" + downloadScriptFileName + "\n");
-            doAllScript.write("echo ............................\n");
-            doAllScript.write("echo .     merging " + chunkCount + " chunks into \"" + outputVideoFileName + "\"\n");
-            doAllScript.write("echo ............................\n");
-            doAllScript.write("bash ./" + concatScriptFileName + "\n");
-            doAllScript.write("#rm -f media_" + urls.chunklistId + "_*.ts \n");
+        try (Writer ffmpegScript = new FileWriter(dir + ffmpegScriptFileName)) {
+            ffmpegScript.write("ffmpeg"
+                    + " -i " + chunklistFileName
+                    + " -c copy"
+                    + " " + outputVideoFileName + "\n"
+            );
         }
-        println("   Or do all with:        bash " + doAllScriptName);
+        println("   Run download script   : " + downloadScriptFileName);
+        println("   Join with ffmpeg      : " + ffmpegScriptFileName);
         println("");
 
         return 0;

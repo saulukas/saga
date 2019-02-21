@@ -9,6 +9,7 @@ import saga.file.SortByDateTool;
 import saga.ip.IPTool;
 import saga.jhat.PrintJhatInstanceCountDiffTool;
 import saga.jwplayer.JWPlayerTool;
+import saga.watch.WatchFilesTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
 import saga.tabs.TabsTool;
@@ -60,6 +61,7 @@ public class SagaTools {
         registerTool(new YamlTool());
         registerTool(new TabsTool());
         registerTool(new JWPlayerTool());
+        registerTool(new WatchFilesTool());
     }
 
     static void registerTool(Tool tool) {
@@ -75,7 +77,7 @@ public class SagaTools {
     }
 
     static void printUsage() {
-        println("SagaTools (c) saga 2017");
+        println("SagaTools (c) saga 2019");
         println("");
         println("Parameters / tools:");
         printAvailableTools();
