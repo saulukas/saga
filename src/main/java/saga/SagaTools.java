@@ -9,7 +9,7 @@ import saga.file.SortByDateTool;
 import saga.ip.IPTool;
 import saga.jhat.PrintJhatInstanceCountDiffTool;
 import saga.jwplayer.JWPlayerTool;
-import saga.watch.WatchFilesTool;
+import saga.unix_win.UnixWinTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
 import saga.tabs.TabsTool;
@@ -20,6 +20,7 @@ import static saga.util.SystemOut.print;
 import static saga.util.SystemOut.println;
 import static saga.util.TextUtils.alignLeft;
 import static saga.util.ListUtils.arrayOf;
+import saga.watch.WatchFilesTool;
 
 public class SagaTools {
 
@@ -62,6 +63,7 @@ public class SagaTools {
         registerTool(new TabsTool());
         registerTool(new JWPlayerTool());
         registerTool(new WatchFilesTool());
+        registerTool(new UnixWinTool());
     }
 
     static void registerTool(Tool tool) {

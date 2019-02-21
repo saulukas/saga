@@ -1,8 +1,11 @@
 #/bin/bash
 
+SAGA="java -jar utils/saga-2019-02-21.jar"
+PATH_SEPARATOR=$($SAGA unix-win path-separator)
+
 echo "---- setting classpath ------------------------------------------------"
-CLASSPATH=$(mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath")
-echo $CLASSPATH | tr ":" "\n"
+CLASS_PATH=$(mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath")
+echo $CLASS_PATH | tr "$PATH_SEPARATOR" "\n"
 
 echo "---- starting Saga Tools ----------------------------------------------"
-java -cp $CLASSPATH saga.SagaTools $*
+java -cp $CLASS_PATH saga.SagaTools $*
