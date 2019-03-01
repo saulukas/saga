@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
+import static java.util.Arrays.asList;
 import saga.Tool;
 import saga.util.ArgList;
 import saga.util.Dto;
@@ -25,7 +26,7 @@ public class WatchFilesTool extends Tool {
         println("");
         println("Parameters:");
         println("");
-        println("   [--list] <files-and-dirs-separated-by-space>  - watch and exit on any change");
+        println("   [--list] <files-and-dirs-separated-by-space-or-path-separator>  - watch and exit on any change");
         println("");
     }
 
@@ -47,7 +48,7 @@ public class WatchFilesTool extends Tool {
         }
         List<String> pathNames = new ArrayList<>();
         while (!args.isEmpty()) {
-            pathNames.add(args.removeHead());
+            pathNames.addAll(asList(args.removeHead().split(File.pathSeparator)));
         }
         watchFilesAndDirectories(pathNames, config);
         return 0;

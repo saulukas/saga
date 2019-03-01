@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 DIRECTORY=`dirname $0`
 
@@ -10,4 +10,4 @@ CLASS_PATH=$(cd $DIRECTORY && mvn -q exec:exec -Dexec.executable=echo -Dexec.arg
 echo $CLASS_PATH | tr "$PATH_SEPARATOR" "\n"
 
 echo "---- starting Saga Tools ----------------------------------------------"
-java -cp $CLASS_PATH saga.SagaTools $*
+java -cp "$CLASS_PATH" saga.SagaTools $*
