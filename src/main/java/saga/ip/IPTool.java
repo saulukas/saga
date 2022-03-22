@@ -149,8 +149,7 @@ public class IPTool extends Tool {
     }
 
     private void print(IPMask mask) {
-        println("  " + alignRight("/" + mask.bitCount(), 15) + " " + mask.asBinaryString()
-        );
+        println("  " + alignRight("/" + mask.bitCount(), 15) + " " + mask.asBinaryString());
     }
 
     private void print(IPSubnet subnet) {
