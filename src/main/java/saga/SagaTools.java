@@ -12,6 +12,7 @@ import saga.jwplayer.JWPlayerTool;
 import saga.unix_win.UnixWinTool;
 import saga.linecount.LineCountTool;
 import saga.linecount.ListFileTypesTool;
+import saga.srt.SrtTool;
 import saga.tabs.TabsTool;
 import saga.yaml.YamlTool;
 
@@ -64,6 +65,7 @@ public class SagaTools {
         registerTool(new JWPlayerTool());
         registerTool(new WatchFilesTool());
         registerTool(new UnixWinTool());
+        registerTool(new SrtTool());
     }
 
     static void registerTool(Tool tool) {
@@ -79,7 +81,7 @@ public class SagaTools {
     }
 
     static void printUsage() {
-        println("SagaTools (c) saga 2019");
+        println("SagaTools (c) saga 2022");
         println("");
         println("Parameters / tools:");
         printAvailableTools();
