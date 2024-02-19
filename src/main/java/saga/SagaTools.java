@@ -2,26 +2,28 @@ package saga;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
-import saga.cvslog.CVSLogFormatterTool;
-import saga.rename.RenameFilesTool;
-import saga.file.SortByDateTool;
-import saga.ip.IPTool;
-import saga.jhat.PrintJhatInstanceCountDiffTool;
-import saga.jwplayer.JWPlayerTool;
-import saga.unix_win.UnixWinTool;
-import saga.linecount.LineCountTool;
-import saga.linecount.ListFileTypesTool;
-import saga.srt.SrtTool;
-import saga.tabs.TabsTool;
-import saga.yaml.YamlTool;
-
+import saga.tools.Tool;
+import saga.tools.cvslog.CVSLogFormatterTool;
+import saga.tools.file.SortByDateTool;
+import saga.tools.ip.IPTool;
+import saga.tools.jhat.PrintJhatInstanceCountDiffTool;
+import saga.tools.jwplayer.JWPlayerTool;
+import saga.tools.linecount.LineCountTool;
+import saga.tools.linecount.ListFileTypesTool;
+import saga.tools.rename.RenameFilesTool;
+import saga.tools.srt.SrtTool;
+import saga.tools.tabs.TabsTool;
+import saga.tools.totp.TotpTool;
+import saga.tools.unix_win.UnixWinTool;
+import saga.tools.watch.WatchFilesTool;
+import saga.tools.yaml.YamlTool;
+import static saga.util.ListUtils.arrayOf;
 import static saga.util.ListUtils.listOf;
 import static saga.util.SystemOut.print;
 import static saga.util.SystemOut.println;
 import static saga.util.TextUtils.alignLeft;
-import static saga.util.ListUtils.arrayOf;
-import saga.watch.WatchFilesTool;
 
 public class SagaTools {
 
@@ -30,6 +32,7 @@ public class SagaTools {
     public static void main(String[] args) {
 
         registerAllTools();
+
         List<String> argList = listOf(args);
         if (argList.isEmpty()) {
             printUsage();
@@ -66,6 +69,7 @@ public class SagaTools {
         registerTool(new WatchFilesTool());
         registerTool(new UnixWinTool());
         registerTool(new SrtTool());
+        registerTool(new TotpTool());
     }
 
     static void registerTool(Tool tool) {

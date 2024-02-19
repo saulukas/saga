@@ -11,11 +11,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-        <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
-        <jar.useDefaultManifestFile>true</jar.useDefaultManifestFile>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <build>
@@ -24,7 +22,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint:unchecked</arg>
@@ -33,7 +31,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -71,6 +69,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.7</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>dev.samstevens.totp</groupId>
+            <artifactId>totp</artifactId>
+            <version>1.7.1</version>
         </dependency>
     </dependencies>
 

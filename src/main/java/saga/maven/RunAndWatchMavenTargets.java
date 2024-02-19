@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.LinkedList;
 import java.util.List;
-import saga.util.Scanner;
+import saga.util.DirectoryScanner;
 import static saga.util.ListUtils.asLinkedList;
 import saga.util.SimpleClassName;
 import static saga.util.SystemOut.println;
@@ -91,7 +91,7 @@ public class RunAndWatchMavenTargets {
         final Process[] process = new Process[]{startCommandProcess(params)};
         int scanIntervalSeconds = 1;
         List<File> dirs = targetDirsOf(params.modules);
-        Scanner.watch(scanIntervalSeconds, dirs, new Scanner.BulkListener() {
+        DirectoryScanner.watch(scanIntervalSeconds, dirs, new DirectoryScanner.BulkListener() {
             @Override
             public void filesChanged(List<String> fileNames) throws Exception {
                 onFilesChanged(fileNames, params, process);

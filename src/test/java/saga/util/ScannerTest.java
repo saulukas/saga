@@ -11,7 +11,7 @@ import static saga.util.SystemOut.println;
 public class ScannerTest {
 
     public static void main(String[] args) throws IOException {
-        Scanner.watch(1, asList(new File(".")), (Scanner.BulkListener) (List<String> fileNames) -> {
+        DirectoryScanner.watch(1, asList(new File(".")), (DirectoryScanner.BulkListener) (List<String> fileNames) -> {
             onFilesChanged(fileNames);
         });
     }

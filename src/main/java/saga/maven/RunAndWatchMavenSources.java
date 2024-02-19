@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import saga.util.Scanner;
+import saga.util.DirectoryScanner;
 import static saga.util.ListUtils.asLinkedList;
 import saga.util.SimpleClassName;
 import static saga.util.SystemOut.println;
@@ -92,7 +92,7 @@ public class RunAndWatchMavenSources {
         int scanIntervalSeconds = 1;
         List<File> dirs = srcDirsOf(params.modules);
         final List<String> canonicalPaths = canonicalPathsOf(params.modules);
-        Scanner.watch(scanIntervalSeconds, dirs, new Scanner.BulkListener() {
+        DirectoryScanner.watch(scanIntervalSeconds, dirs, new DirectoryScanner.BulkListener() {
             @Override
             public void filesChanged(List<String> fileNames) throws Exception {
                 onFilesChanged(fileNames, canonicalPaths, params, process);
