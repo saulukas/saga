@@ -5,7 +5,6 @@ import java.util.Scanner;
 import saga.tools.Tool;
 import saga.util.ArgList;
 import static saga.util.Equal.equal;
-import saga.util.SystemIn;
 import static saga.util.SystemOut.println;
 
 public class TotpTool extends Tool {
@@ -45,16 +44,25 @@ public class TotpTool extends Tool {
         return System.currentTimeMillis() / 30_000;
     }
 
+    static long secondsLeft(long counter) {
+        long secondsPassed = (System.currentTimeMillis() - counter * 30_000) / 1000;
+        return (secondsPassed >= 30) ? 0 : (30 - secondsPassed);
+    }
+
     int generateTotp(ArgList args) throws Exception {
         Scanner stdin = new Scanner(System.in);
         String seed = stdin.next();
         
         DefaultCodeGenerator generator = new DefaultCodeGenerator();
         long counter = currentCounter();
+        long validForSecs = secondsLeft(counter);
 
         String otp = generator.generate(seed, counter);
 
-        System.out.print(otp);
+        System.out.println("");
+        System.out.println("    Time-based OTP : " + otp);
+        System.out.println("    Seconds left   : " + validForSecs);
+        
         return 0;
     }
 
