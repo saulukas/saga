@@ -52,7 +52,7 @@ public class TotpTool extends Tool {
     int generateTotp(ArgList args) throws Exception {
         Scanner stdin = new Scanner(System.in);
         String seed = stdin.next();
-        
+
         DefaultCodeGenerator generator = new DefaultCodeGenerator();
         long counter = currentCounter();
         long validForSecs = secondsLeft(counter);
@@ -62,7 +62,8 @@ public class TotpTool extends Tool {
         System.out.println("");
         System.out.println("    Time-based OTP : " + otp);
         System.out.println("    Seconds left   : " + validForSecs);
-        
+        System.out.println("");
+
         return 0;
     }
 
